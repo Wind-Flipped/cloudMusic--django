@@ -16,7 +16,7 @@ class IndexView(View):
     """显示首页"""
 
     def get(self, request):
-        return render(request, 'index.html')
+        return render(request, 'users/index.html')
 
 
 class RegisterView(View):
@@ -34,7 +34,7 @@ class RegisterView(View):
 
     def get(self, request):
         register_form = RegisterForm()
-        return render(request, 'register.html', {'register_form': register_form})
+        return render(request, 'users/register.html', {'register_form': register_form})
 
     def post(self, request):
         register_form = RegisterForm(request.POST)
@@ -43,11 +43,11 @@ class RegisterView(View):
             name = request.POST.get('name', '')
             password = request.POST.get('password', '')
             if UserProfile.objects.filter(user_email=email):  # 判断邮箱是否已经注册过了
-                return render(request, 'register.html', {'register_form': register_form, 'msg': '用户邮箱已经存在！'})
+                return render(request, 'users/register.html', {'register_form': register_form, 'msg': '用户邮箱已经存在！'})
             elif UserProfile.objects.filter(user_name=name):  # 判断用户名是否已存在
-                return render(request, 'register.html', {'register_form': register_form, 'msg': '用户名已经存在！'})
+                return render(request, 'users/register.html', {'register_form': register_form, 'msg': '用户名已经存在！'})
             elif not RegisterView.isValid(email):  # 只有邮箱有效才保存
-                return render(request, 'register.html', {'register_form': register_form, 'msg': '邮箱错误'})
+                return render(request, 'users/register.html', {'register_form': register_form, 'msg': '邮箱错误'})
             else:
                 user_profile = UserProfile()
                 user_profile.username = name
@@ -62,7 +62,7 @@ class RegisterView(View):
                 try:
                     send_link_email(email)  # 发送激活邮件
                 except AttributeError:
-                    return render(request, 'register.html', {'msg': '邮箱错误'})
+                    return render(request, 'users/register.html', {'msg': '邮箱错误'})
                 # 跳转到登录界面
                 return redirect('../login')
 
@@ -76,7 +76,7 @@ class RegisterView(View):
                 # 取全局钩子函数的匹配报错信息的方法
                 g_error = register_form.errors.get("__all__")[0]
                 # 只选取第一个错误
-            return render(request, 'register.html', locals())  # 把错误数据渲染到模板
+            return render(request, 'users/register.html', locals())  # 把错误数据渲染到模板
 
 
 class RegisterActiveView(View):
@@ -102,7 +102,7 @@ class LoginView(View):
     """用户登录功能"""
 
     def get(self, request):
-        return render(request, 'login.html', {})
+        return render(request, 'users/login.html', {})
 
     def post(self, request):
         login_form = LoginForm(request.POST)
@@ -115,11 +115,11 @@ class LoginView(View):
                     login(request, user)
                     return HttpResponseRedirect(reverse('index'))
                 else:
-                    return render(request, 'login.html', {'msg': '用户不存在'})
+                    return render(request, 'users/login.html', {'msg': '用户不存在'})
             else:
-                return render(request, 'login.html', {'login_form': login_form, 'msg': '用户名或密码错误'})
+                return render(request, 'users/login.html', {'login_form': login_form, 'msg': '用户名或密码错误'})
         else:
-            return render(request, 'login.html', {'login_form': login_form})
+            return render(request, 'users/login.html', {'login_form': login_form,'msg': '输入信息有误'})
 
 
 class ForgetpwdView(View):
@@ -182,7 +182,7 @@ class PwdmodifyView(View):
                     pwdmodify_code_e.is_delete = 1
                     pwdmodify_code_e.save()
 
-                    return render(request, 'login.html', {'pwdreset_msg': '密码重置成功，请登录'})
+                    return render(request, 'users/login.html', {'pwdreset_msg': '密码重置成功，请登录'})
             else:
                 return render(request, 'password_reset.html',
                               {'pwdmodify_form': pwdmodify_form, 'msg': '两次输入不一致，请重新输入'})
@@ -205,7 +205,7 @@ class UserInfoView(View):
         """进入个人中心"""
         user = request.user.username
         if not user:  # 未登录
-            return render(request, 'login.html', {'pwdreset_msg': '您还未登录...'})
+            return render(request, 'users/login.html', {'pwdreset_msg': '您还未登录...'})
         else:
             return render(request, 'usercenter-info.html')
 

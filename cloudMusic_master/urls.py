@@ -16,12 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from django.contrib import staticfiles
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include(('users.urls', 'users'), namespace='users')),
 ]
-
+#设置静态文件路径
+urlpatterns += staticfiles_urlpatterns()
 # handler400 = views.bad_request
 # handler403 = views.permission_denied
 # handler404 = views.page_not_found

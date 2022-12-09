@@ -6,9 +6,9 @@ from django.core.exceptions import ValidationError  #错误管理
 
 class RegisterForm(forms.Form):
     """注册信息验证"""
-    email = forms.EmailField(required=True,max_length=30,error_messages={"required":"邮箱不能为空"})
-    password = forms.CharField(required=True, min_length=6, max_length=20,error_messages={'required':"密码不能为空","max_length":"密码长度应小于20","min_length":"密码长度应大于6"})
-    name = forms.CharField(required=True,max_length=20,error_messages={'required':"用户名不能为空","max_length":"用户名长度应小于20"})
+    email = forms.EmailField(required=True,max_length=30)
+    password = forms.CharField(required=True, min_length=6, max_length=20)
+    name = forms.CharField(required=True,max_length=20)
     r_password = forms.CharField(required=True, min_length=6, max_length=20)
     # captcha = CaptchaField(error_messages={'invalid': '验证码错误'})
 

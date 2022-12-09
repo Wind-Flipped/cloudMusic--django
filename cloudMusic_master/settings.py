@@ -145,7 +145,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # UserProfile 覆盖了 django 内置的 users 表
 AUTH_USER_MODEL = 'users.UserProfile'
-
+# ModelBackend模块下的authenticate方法
+AUTHENTICATION_BACKENDS=['django.contrib.auth.backends.AllowAllUsersModelBackend']
 # 重写ModelBackend模块下的authenticate方法
 # AUTHENTICATION_BACKENDS = (
 #     'users.views.RewriteAuthenticate',

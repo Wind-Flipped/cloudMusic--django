@@ -10,7 +10,7 @@ from utils.mixin_utils import LoginRequiredMixin
 # Create your views here.
 import re
 import json
-
+from django.core.exceptions import ObjectDoesNotExist
 
 class IndexView(View):
     """显示首页"""
@@ -26,7 +26,7 @@ class RegisterView(View):
 
     # TODO 考虑直接发邮件，验证码
     @classmethod
-    def isValid(email):
+    def isValid(self,email):
         if re.fullmatch(RegisterView.regex, email):
             return True
         else:
@@ -42,41 +42,41 @@ class RegisterView(View):
             email = request.POST.get('email', '')
             name = request.POST.get('name', '')
             password = request.POST.get('password', '')
-            if UserProfile.objects.filter(user_email=email):  # 判断邮箱是否已经注册过了
+            if UserProfile.objects.filter(email=email):  # 判断邮箱是否已经注册过了
                 return render(request, 'users/register.html', {'register_form': register_form, 'msg': '用户邮箱已经存在！'})
-            elif UserProfile.objects.filter(user_name=name):  # 判断用户名是否已存在
+            elif UserProfile.objects.filter(username=name):  # 判断用户名是否已存在
                 return render(request, 'users/register.html', {'register_form': register_form, 'msg': '用户名已经存在！'})
             elif not RegisterView.isValid(email):  # 只有邮箱有效才保存
                 return render(request, 'users/register.html', {'register_form': register_form, 'msg': '邮箱错误'})
             else:
                 user_profile = UserProfile()
                 user_profile.username = name
-                user_profile.password = name
+                user_profile.password = password
                 user_profile.email = email
                 # 父类的属性，用于验证用户名密码
                 # user_profile.user_name = name
                 # user_profile.user_email = email
                 # user_profile.user_password = make_password(password)
-                user_profile.is_active = False
+                user_profile.is_active = True
                 user_profile.save()
-                try:
-                    send_link_email(email)  # 发送激活邮件
-                except AttributeError:
-                    return render(request, 'users/register.html', {'msg': '邮箱错误'})
+                # try:
+                #     send_link_email(email)  # 发送激活邮件
+                # except AttributeError:
+                #     return render(request, 'users/register.html', {'msg': '邮箱错误'})
                 # 跳转到登录界面
                 return redirect('../login')
 
         else:
-            error = register_form.errors  # 拿到自定义规则或自带规则的错误信息
+            # error = register_form.errors  # 拿到自定义规则或自带规则的错误信息
             '''
             第二层全局错误,__all__:全局错误信息
             如果全局错误里不为空，则取错误
             '''
-            if register_form.errors.get("__all__"):
-                # 取全局钩子函数的匹配报错信息的方法
-                g_error = register_form.errors.get("__all__")[0]
-                # 只选取第一个错误
-            return render(request, 'users/register.html', locals())  # 把错误数据渲染到模板
+            # if register_form.errors.get("__all__"):
+            #     # 取全局钩子函数的匹配报错信息的方法
+            #     g_error = register_form.errors.get("__all__")[0]
+            #     # 只选取第一个错误
+            return render(request, 'users/register.html', {'register_form': register_form,'msg': '输入信息有误'})  # 把错误数据渲染到模板
 
 
 class RegisterActiveView(View):
@@ -109,15 +109,24 @@ class LoginView(View):
         if login_form.is_valid():
             login_user = request.POST.get('username', '')
             login_password = request.POST.get('password', '')
-            user = authenticate(user_name=login_user, user_password=login_password)
-            if user:  # 通过验证
-                if user.is_active:  # 已激活
-                    login(request, user)
-                    return HttpResponseRedirect(reverse('index'))
+            try:
+                user = UserProfile.objects.get(username=login_user)
+                if user.password == login_password:
+                    login(request,user)
+                    return redirect('../index')
                 else:
-                    return render(request, 'users/login.html', {'msg': '用户不存在'})
-            else:
-                return render(request, 'users/login.html', {'login_form': login_form, 'msg': '用户名或密码错误'})
+                    return render(request,'users/login.html',{'msg':'用户密码错误'})
+            except ObjectDoesNotExist as e:
+                return render(request, 'users/login.html', {'msg': '用户不存在'})
+            # user = authenticate(username=login_user, password=login_password)
+            # if user:  # 通过验证
+            #     if user.is_active:  # 已激活
+            #         login(request, user)
+            #         return HttpResponseRedirect(reverse('index'))
+            #     else:
+            #         return render(request, 'users/login.html', {'msg': '用户不存在'})
+            # else:
+            #     return render(request, 'users/login.html', {'login_form': login_form, 'msg': '用户名或密码错误'})
         else:
             return render(request, 'users/login.html', {'login_form': login_form,'msg': '输入信息有误'})
 
@@ -135,10 +144,10 @@ class ForgetpwdView(View):
         if forgetpwd_form.is_valid():
             email = request.POST.get('email', '')
             if UserProfile.objects.filter(email=email):
-                try:
-                    send_link_email(email, send_type='forget')  # 发送重置密码链接
-                except AttributeError:
-                    return render(request, 'forgetpwd.html', {'msg': '邮箱错误'})
+                # try:
+                #     send_link_email(email, send_type='forget')  # 发送重置密码链接
+                # except AttributeError:
+                #     return render(request, 'forgetpwd.html', {'msg': '邮箱错误'})
                 return render(request, "email_send_success.html",
                               {'email': email, 'msg': '请前往查收并点击链接重置密码'})
             else:

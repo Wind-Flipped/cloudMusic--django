@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="../../static/css/login.css">
 </head>
 <body>
-        <form action="{% url 'users:login' %}" class="" method="post">
+        <form action="{% url 'users:login' %}" class="" method="post" autocomplete="off">
             {% csrf_token %}
 
             <div class="login "><a>登录页面</a> </div>
@@ -36,8 +36,8 @@
                       {{ msg }}
                   {% endif %}
                 </p>
-            <div class="register fr"><a href="register.html">注册新账号</a> </div>
-            <div class="register fr"><a href="reset.html">忘记密码</a> </div>
+            <div class="register fr"><a href="{% url 'users:register' %}">注册新账号</a> </div>
+            <div class="register fr"><a href="{% url 'users:forgetpwd' %}">忘记密码</a> </div>
         </form>
 
   <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->

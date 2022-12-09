@@ -9,7 +9,7 @@ class UserProfile(AbstractUser):
     # user_password = models.CharField(max_length=20, verbose_name="密码", null=False)
     user_exp = models.IntegerField(verbose_name="经验值", null=False, default=0)
     user_rank = models.IntegerField(verbose_name="用户等级", null=False, default=1)
-    user_create_time = models.DateField(verbose_name="用户创建时间", null=False, auto_now_add=False)
+    user_create_time = models.DateField(verbose_name="用户创建时间", null=False, auto_now_add=False, default=datetime.datetime.now)
     user_is_admin = models.BooleanField(verbose_name="是否为管理员", null=False, default=False)
     # user_email = models.EmailField(verbose_name="用户邮箱", null=False)
 

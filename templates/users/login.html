@@ -15,7 +15,7 @@
   <!-- 3.当前样式 -->
   <link rel="stylesheet" href="../../static/css/login.css">
 </head>
-<body>
+<body background="../../static/images/girl.png">
         <form action="{% url 'users:login' %}" class="" method="post" autocomplete="off">
             {% csrf_token %}
 
@@ -36,8 +36,11 @@
                       {{ msg }}
                   {% endif %}
                 </p>
+                <p style="color: green;text-align: center">
+                    {{ pwdreset_msg }}
+                </p>
             <div class="register fr"><a href="{% url 'users:register' %}">注册新账号</a> </div>
-            <div class="register fr"><a href="{% url 'users:forgetpwd' %}">忘记密码</a> </div>
+            <div class="register fr"><a href="{% url 'users:pwdmodify' %}">忘记密码</a> </div>
         </form>
 
   <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->

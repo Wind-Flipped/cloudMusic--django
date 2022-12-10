@@ -136,7 +136,7 @@ class ForgetpwdView(View):
 
     def get(self, request):
         forgetpwd_form = ForgetpwdForm()
-        return render(request, 'forgetpwd.html', {'forgetpwd_form': forgetpwd_form})
+        return render(request, 'pwdmodify.html', {'forgetpwd_form': forgetpwd_form})
 
     def post(self, request):
         """获取邮箱并发送重置密码链接"""
@@ -147,13 +147,13 @@ class ForgetpwdView(View):
                 # try:
                 #     send_link_email(email, send_type='forget')  # 发送重置密码链接
                 # except AttributeError:
-                #     return render(request, 'forgetpwd.html', {'msg': '邮箱错误'})
+                #     return render(request, 'pwdmodify.html', {'msg': '邮箱错误'})
                 return render(request, "email_send_success.html",
                               {'email': email, 'msg': '请前往查收并点击链接重置密码'})
             else:
-                return render(request, 'forgetpwd.html', {'forgetpwd_form': forgetpwd_form, 'msg': '该邮箱未注册'})
+                return render(request, 'pwdmodify.html', {'forgetpwd_form': forgetpwd_form, 'msg': '该邮箱未注册'})
         else:
-            return render(request, 'forgetpwd.html', {'forgetpwd_form': forgetpwd_form})
+            return render(request, 'pwdmodify.html', {'forgetpwd_form': forgetpwd_form})
 
 
 class PwdresetView(View):
@@ -173,30 +173,41 @@ class PwdresetView(View):
 class PwdmodifyView(View):
     """密码重置功能"""
 
+    def get(self, request):
+        pwdmodify_form = PwdmodifyForm()
+        return render(request, 'users/pwdmodify.html', {'pwdmodify_form': pwdmodify_form})
     def post(self, request):
         """密码重置处理"""
         pwdmodify_form = PwdmodifyForm(request.POST)
         if pwdmodify_form.is_valid():
+            username = request.POST.get('username','')
             password1 = request.POST.get('password1', '')
             password2 = request.POST.get('password2', '')
-            pwdmodify_email = request.POST.get('email', '')
-            pwdmodify_code = request.POST.get('pwdreset_code', '')
-            if password1 == password2:
-                pwdmodify_user = UserProfile.objects.get(email=pwdmodify_email)
-                pwdmodify_user.password = make_password(password1)
-                pwdmodify_user.save()
-
-                pwdmodify_code_es = EmailVerification.objects.filter(code=pwdmodify_code)
-                for pwdmodify_code_e in pwdmodify_code_es:
-                    pwdmodify_code_e.is_delete = 1
-                    pwdmodify_code_e.save()
-
+            email = request.POST.get('email', '')
+            user = UserProfile.objects.get(username=username)
+            if user:
+                if user.email != email:
+                    return render(request,'users/pwdmodify.html',{'pwdmodify_form': pwdmodify_form, 'msg': '账号对应邮箱错误'})
+                else:
+                    user.password = password1
+                    user.save()
                     return render(request, 'users/login.html', {'pwdreset_msg': '密码重置成功，请登录'})
+            # pwdmodify_code = request.POST.get('pwdreset_code', '')
+            # if password1 == password2:
+            #     pwdmodify_user = UserProfile.objects.get(email=pwdmodify_email)
+            #     pwdmodify_user.password = make_password(password1)
+            #     pwdmodify_user.save()
+
+                # pwdmodify_code_es = EmailVerification.objects.filter(code=pwdmodify_code)
+                # for pwdmodify_code_e in pwdmodify_code_es:
+                #     pwdmodify_code_e.is_delete = 1
+                #     pwdmodify_code_e.save()
             else:
-                return render(request, 'password_reset.html',
-                              {'pwdmodify_form': pwdmodify_form, 'msg': '两次输入不一致，请重新输入'})
+                return render(request, 'users/pwdmodify.html',
+                              {'pwdmodify_form': pwdmodify_form, 'msg': '该账号不存在'})
         else:
-            return render(request, 'password_reset.html', {'pwdmodify_form': pwdmodify_form})
+            return render(request, 'users/pwdmodify.html',
+                              {'pwdmodify_form': pwdmodify_form, 'msg': '输入错误'})
 
 
 class LogoutView(View):

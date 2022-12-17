@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>cloudMusic_master</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/images/girl.png">
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css">
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <!--logo-->
+        <a href="index.html" class="logo"></a>
+        <!--导航标签-->
+        <div class="nav">
+            <ul class="navbar">
+                <li><a href="index.html" class="active">首页</a></li>
+                <li><a href="sings.html">歌曲</a></li>
+                <li><a href="singers.html;">歌手</a></li>
+                <li><a href="community.html;">社区</a></li>
+            </ul>
+        </div>
+
+        <!--搜索栏-->
+        <div class="search">
+            <form class="form-search" action="" method="">
+                {% csrf_token %}
+                <input type="text" id="search-input" class="form-search-input" placeholder="搜歌手、歌曲" autocomplete="off"/>
+                <a class="form-search-icon" href="javascript:;" onclick="searchBtnClick(this,event)"></a>
+            </form>
+        </div>
+
+
+    </div>
+</header>
+
+<div class="container">
+    <div class="movie-grid">
+        <div class="panel">
+            <div class="main">
+                <div class="panel-header">
+                    <span class="panel-title">猜你喜欢（<span>20</span>首）</span>
+                    <a href="javascript:;" class="panel-more">更多</a>
+                </div>
+                <div class="movie-list">
+                    <ul>
+                        <li>
+                            <a href="movie.html" class="movie-poster">
+                                <img src="../../static/images/girl.png" alt="" class="poster">
+                                <span class="movie-score">8.0</span>
+                            </a>
+                            <span class="movie-title">小苹果</span>
+                            <a href="sing.html" class="movie-ticket-buy">查看详情</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="aside">
+                <div class="panel-header">
+                    <span class="panel-title">热门歌手</span>
+                    <a href="javascript:;" class="panel-more">更多</a>
+                </div>
+                <div class="movie-rank">
+                    <ul>
+                        <li>
+                            <a href="javascript:;">
+                                <span class="movie-rank-num movie-rank-top3">1</span>
+                                <p class="movie-rank-name">张三</p>
+                                <span class="box-office">1400万</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <span class="movie-rank-num movie-rank-top3">2</span>
+                                <p class="movie-rank-name">李四</p>
+                                <span class="box-office">1400万</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <span class="movie-rank-num movie-rank-top3">3</span>
+                                <p class="movie-rank-name">王二</p>
+                                <span class="box-office">1000万</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <span class="movie-rank-num">4</span>
+                                <p class="movie-rank-name">麻子</p>
+                                <span class="box-office">900万</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="main">
+                <div class="panel-header">
+                    <span class="panel-title">即将上线（<span>30</span>首）</span>
+                    <a href="javascript:;" class="panel-more">更多</a>
+                </div>
+                <div class="movie-list">
+                    <ul>
+                        <li>
+                            <a href="javascript:;" class="movie-poster">
+                                <img src="../../static/images/girl.png" alt="" class="poster">
+                                <span class="movie-score">12月25日上线</span>
+                            </a>
+                            <span class="movie-title">小苹果</span>
+                            <a href="javascript:;" class="movie-ticket-buy">预售</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="link-nav">
+            <ul>
+                <li><a href="javascript:;">关于我们</a></li>
+                <li><a href="javascript:;">加入我们</a></li>
+                <li><a href="javascript:;">联系我们</a></li>
+                <li><a href="javascript:;">隐私政策</a></li>
+                <li><a href="javascript:;">问题反馈</a></li>
+            </ul>
+            <div class="copyright">cloudMusic_Master</div>
+        </div>
+        <div class="sns">
+            <a href="javascript:;" class="sina-icon icon"></a>
+            <a href="javascript:;" class="wechat-icon icon"></a>
+            <a href="javascript:;" class="rss-icon icon"></a>
+        </div>
+    </div>
+</footer>
+
+<div id="toTop"></div>
+
+<script type="text/javascript" src="../../static/js/cloudMusic_main.js"></script>
+<script type="text/javascript" src="../../static/js/slidey.js"></script>
+<script type="text/javascript">
+    window.onload = function () {
+        setPage("index.html");
+        initPublic();
+        initScrollToTop();
+        new initSlidey();
+    };
+</script>
+</body>
+</html>

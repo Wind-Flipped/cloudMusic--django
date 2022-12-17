@@ -16,7 +16,7 @@ class IndexView(View):
     """显示首页"""
 
     def get(self, request):
-        return render(request, 'users/index.html')
+        return render(request, 'users/../templates/cloudMusic/index.html')
 
 
 class RegisterView(View):
@@ -113,7 +113,7 @@ class LoginView(View):
                 user = UserProfile.objects.get(username=login_user)
                 if user.password == login_password:
                     login(request,user)
-                    return redirect('../index')
+                    return redirect('../../cloudMusic/index.html')
                 else:
                     return render(request,'users/login.html',{'msg':'用户密码错误'})
             except ObjectDoesNotExist as e:
@@ -215,7 +215,7 @@ class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect(reverse('index'))
+        return redirect('../../cloudMusic/index.html')
 
 
 class UserInfoView(View):
@@ -227,7 +227,7 @@ class UserInfoView(View):
         if not user:  # 未登录
             return render(request, 'users/login.html', {'pwdreset_msg': '您还未登录...'})
         else:
-            return render(request, 'usercenter-info.html')
+            return render(request, 'users/userinfo.html')
 
 
 class UploadUserInfoView(LoginRequiredMixin, View):

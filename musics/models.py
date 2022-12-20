@@ -26,12 +26,10 @@ class Music_Information(models.Model):
     music_name = models.CharField(max_length=32, verbose_name="歌曲名称", null=False)
     music_singing_type = models.CharField(choices=singing_type, max_length=10, verbose_name="歌曲演唱形式", null=False)
     music_theme = models.CharField(choices=theme, max_length=20, verbose_name="歌曲主题", null=False)
-    music_duration = models.DateTimeField(verbose_name="歌曲时长", null=False)
-    music_popularity = models.IntegerField(verbose_name="歌曲流行度", null=False)
-
-    class Meta:
-        managed = True
-        db_table = "music_platform_database"
+    music_duration = models.IntegerField(verbose_name="歌曲时长", null=False, default=3)
+    music_popularity = models.IntegerField(verbose_name="歌曲流行度", null=False, default=0)
+    music_link = models.CharField(max_length=1000, verbose_name="播放链接", default="http://ws.stream.qqmusic.qq.com/C400003UkWuI0E8U0l.m4a?guid=472740677&vkey=E3E33D1B7EEEC9C30F9D1F0E42E27F00CB92E8515BC8442E617ACEF1F646C6F9DD9397DD7DBED4300B1A044D27237FFD76D00883AB7FE62B&uin=&fromtag=120032")
+    music_public_time = models.DateField(verbose_name="歌曲创作时间", default=datetime.date.today())
 
 class Singer_Information(models.Model):
 
@@ -60,8 +58,8 @@ class Singer_Information(models.Model):
     singer_nationality = models.CharField(max_length=10, choices=nationality, verbose_name="歌手国籍", null=False)
     singer_age = models.IntegerField(verbose_name="歌手年龄", null=False)
     singer_sex = models.CharField(max_length=10, choices=sex, verbose_name="歌手性别", null=False)
-    singer_popularity = models.IntegerField(verbose_name="歌手热度", null=False)
-    singer_debut_time = models.DateField(verbose_name="歌手出道时间", null=False)
+    singer_popularity = models.IntegerField(verbose_name="歌手热度", null=False, default=0)
+    singer_debut_time = models.DateField(verbose_name="歌手出道时间", null=False, default=datetime.date.today())
 
     class Meta:
         managed = True
@@ -79,9 +77,9 @@ class Album_Information(models.Model):
     album_name = models.CharField(max_length=30, verbose_name="专辑名称", null=False)
     album_coverpage_pattern = models.CharField(max_length=10, choices=coverpage_pattern,
                                                verbose_name="专辑封面设计方式", null=False)
-    album_music_num = models.IntegerField(verbose_name="专辑包含歌曲数量", null=False)
-    album_created_time = models.DateField(verbose_name="专辑创建时间", null=False)
-    album_popularity = models.IntegerField(verbose_name="专辑热度", null=False)
+    album_music_num = models.IntegerField(verbose_name="专辑包含歌曲数量", null=False, default=0)
+    album_created_time = models.DateField(verbose_name="专辑创建时间", null=False,default=datetime.date.today())
+    album_popularity = models.IntegerField(verbose_name="专辑热度", null=False,default=0)
 
     class Meta:
         managed = True
@@ -91,7 +89,6 @@ class Songsheet_Information(models.Model):
 
     songsheet_id = models.AutoField(primary_key=True, verbose_name="Songsheet Id")
     songsheet_name = models.CharField(max_length=32, verbose_name="Songsheet Name", null=False)
-    songsheet_music_num = models.IntegerField(verbose_name="Songsheet Volume", default=0)
 
     class Meta:
         managed = True
@@ -109,6 +106,7 @@ class Comment_Information(models.Model):
     comment_theme = models.CharField(max_length=100, verbose_name="评论主题", null=False)
     comment_grade = models.CharField(choices=grade, max_length=10, verbose_name="评论基调", null=False)
     comment_content = models.CharField(max_length=10000, verbose_name="评论内容", null=False)
+    comment_time = models.DateTimeField(verbose_name='评论时间', default=datetime.datetime.now())
 
     class Meta:
         managed = True
@@ -118,7 +116,6 @@ class Feedback_Information(models.Model):
 
     feedback_id = models.AutoField(primary_key=True, verbose_name="回帖id")
     feedback_theme = models.CharField(max_length=100, verbose_name="回帖主题", null=False)
-    feedback_time = models.DateField(verbose_name="回帖时间", null=False)
     feedback_content = models.CharField(max_length=10000, verbose_name="回帖内容", null=False)
 
     class Meta:
@@ -201,7 +198,6 @@ class User_Comment_Music(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default="")
     comment = models.ForeignKey(Comment_Information, on_delete=models.CASCADE, default="")
     target_music = models.ForeignKey(Music_Information, on_delete=models.CASCADE, default="")
-    comment_time = models.DateField(verbose_name='评论时间', default=datetime.date.today())
 
     class Meta:
         managed = True
@@ -212,7 +208,6 @@ class User_Comment_Singer(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default="")
     comment = models.ForeignKey(Comment_Information, on_delete=models.CASCADE, default="")
     target_singer = models.ForeignKey(Singer_Information, on_delete=models.CASCADE, default="")
-    comment_time = models.DateField(verbose_name='评论时间', default=datetime.date.today())
 
     class Meta:
         managed = True
@@ -229,14 +224,14 @@ class User_Feedback_Comment(models.Model):
         managed = True
         db_table = "user_feedback_comment"
 
-class User_Relationship(models.Model):
+class User_Become_Singer(models.Model):
 
-    user_1 = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="用户1",
-                               related_name="user_one", default="")
-    user_2 = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="用户2",
-                               related_name="user_two", default="")
-    time = models.DateField(verbose_name="关注时间", default=datetime.date.today())
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='用户账号')
+    singer = models.ForeignKey(Singer_Information, on_delete=models.CASCADE, verbose_name='歌手账号')
 
-    class Meta:
-        managed = True
-        db_table = "user_relationship"
+class Singer_Write_Music(models.Model):
+
+    singer = models.ForeignKey(Singer_Information, on_delete=models.CASCADE, verbose_name="创作者")
+    music = models.ForeignKey(Music_Information, on_delete=models.CASCADE, verbose_name="歌曲")
+    public_time = models.DateField(verbose_name="出版时间", default=datetime.date.today())
+

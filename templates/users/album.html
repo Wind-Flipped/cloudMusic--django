@@ -132,15 +132,15 @@
                             <div class="webinfo">
                                 <div class="webinfo-item">
                                     <div class="webinfo-site-uv-name">用户等级 :</div>
-                                    <div>{{ user.user_rank }}</div>
+                                    <div>{{ request.user.user_rank }}</div>
                                 </div>
                                 <div class="webinfo-item">
                                     <div class="webinfo-site-name">用户经验 :</div>
-                                    <div>{{ user.user_exp }} / {{ user_need_exp }}</div>
+                                    <div>{{ request.user.user_exp }}</div>
                                 </div>
                                 <div class="webinfo-item">
                                     <div class="webinfo-site-name">是否为歌手 :</div>
-                                    <div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
                                         {% if singer %}
                                             是
                                             {% else %}
@@ -152,40 +152,40 @@
                                     {% if singer %}
                                 <div class="webinfo-item">
                                     <div class="webinfo-site-name">歌手姓名</div>
-                                    <div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
                                         {{ singer.singer_name }}
                                     </div>
                                 </div>
                                 <div class="webinfo-item">
                                     <div class="webinfo-site-name">歌手年龄</div>
-                                    <div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
                                         {{ singer.singer_age }}
                                     </div>
                                 </div>
                                         <div class="webinfo-item">
                                     <div class="webinfo-site-name">歌手性别</div>
-                                    <div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
                                         {{ singer.singer_sex }}
                                     </div>
                                         </div>
 
                                     <div class="webinfo-item">
                                     <div class="webinfo-site-name">歌手国籍</div>
-                                    <div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
                                         {{ singer.singer_nationality }}
                                     </div>
                                     </div>
 
                                     <div class="webinfo-item">
                                     <div class="webinfo-site-name">歌手热度</div>
-                                    <div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
                                         {{ singer.singer_popularity }}
                                     </div>
                                     </div>
 
                                         <div class="webinfo-item">
                                     <div class="webinfo-site-name">歌手出道时间</div>
-                                    <div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
                                         {{ singer.singer_debut_time }}
                                     </div>
                                         </div>
@@ -198,255 +198,47 @@
                 </div>
                 <article id="page">
                     <div class="article-container">
-                        <h2>音乐</h2>
-                        <meting-js auto="https://www.iculture.cc/demo/music">
-                        </meting-js>
-                        <hr>
-
-                        <h2>技能</h2>
-                        <div class="skillbox">
-                            <div class="skillbar">
-                                <div class="skillbar-title"
-                                    style="background: linear-gradient(to right, #FF0066 0%, #FF00CC 100%); width: 90%">
-                                    <span>Golang</span>
-                                </div>
-                                <div class="skill-bar-percent">90%</div>
-                            </div>
-                            <div class="skillbar">
-                                <div class="skillbar-title"
-                                    style="background: linear-gradient(to right, #9900FF 0%, #CC66FF 100%); width: 80%">
-                                    <span>Python</span>
-                                </div>
-                                <div class="skill-bar-percent">80%</div>
-                            </div>
-                            <div class="skillbar">
-                                <div class="skillbar-title"
-                                    style="background: linear-gradient(to right, #2196F3 0%, #42A5F5 100%); width: 70%">
-                                    <span>Java</span>
-                                </div>
-                                <div class="skill-bar-percent">70%</div>
-                            </div>
-                            <div class="skillbar">
-                                <div class="skillbar-title"
-                                    style="background: linear-gradient(to right, #00BCD4 0%, #80DEEA 100%); width: 90%">
-                                    <span>渗透测试</span>
-                                </div>
-                                <div class="skill-bar-percent">90%</div>
-                            </div>
-                            <div class="skillbar">
-                                <div class="skillbar-title"
-                                    style="background: linear-gradient(to right, #00BCD4 0%, #f54009 100%); width: 80%">
-                                    <span>代码审计</span>
-                                </div>
-                                <div class="skill-bar-percent">80%</div>
-                            </div>
-                            <div class="skillbar">
-                                <div class="skillbar-title"
-                                    style="background: linear-gradient(to right, #4CAF50 0%, #81C784 100%); width: 60%">
-                                    <span>逆向破解</span>
-                                </div>
-                                <div class="skill-bar-percent">60%</div>
-                            </div>
-                            <div class="skillbar">
-                                <div class="skillbar-title"
-                                    style="background: linear-gradient(to right, #FFEB3B 0%, #FFF176 100%); width: 50%">
-                                    <span>机器学习</span>
-                                </div>
-                                <div class="skill-bar-percent">50%</div>
-                            </div>
-                        </div>
 
                         <hr>
-                        <h2>个人歌单</h2>
-                        {% if request.user == user %}
-                    <form action="{% url 'musics:Personal_View' %}?op_type=Create_songsheet" class="" method="post" autocomplete="off">
-                        {% csrf_token %}
-                        <div>
-                        <p class="fl"></p><input placeholder="请输入歌单名" name="songsheet_name">
-                        </div>
-                        <div type="submit"><button type="submit" onclick="">
-                            <div id="app"><el-button type="primary" round >添加歌单</el-button> </div></button>
-                        </div>
-                    </form>
-                        {% endif %}
-
+                        <h2>歌手： {{ singer.singer_name }}  的专辑： {{ album_name }}</h2>
                         <table>
-                            <caption>拥有的歌单</caption>
-                            <thead>
-                            <tr>
-                                <th>歌单名称</th>
-                                <th>歌曲总热度</th>
-                                <th>查看详情</th>
-                                {% if user == request.user %}
-                                <th>删除歌曲</th>
-                                {% endif %}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for sheet in songsheet %}
-                            <tr>
-                                <th>{{ sheet.songsheet_name }}</th>
-                                <th>{{ sheet.songsheet_id }}</th>
-                                <th><a href="{% url 'musics:Songsheet_View' %}?songsheet_id={{ sheet.songsheet_id }}">
-                                    <i class="el-icon-document"></i>
-                                    </a></th>
-                                {% if user == request.user %}
-                                <th><form action="{% url 'musics:Personal_View' %}?op_type=Delete_Songsheet&songsheet_id={{ sheet.songsheet_id }}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" onclick=""><i class="el-icon-delete"></i></button>
-                                    </form></th>
-                                {% endif %}
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-
-                        <hr>
-                        <h2>收藏歌曲</h2>
-                        <table>
-                            <caption>收藏的歌曲</caption>
+                            <caption>专辑所发行歌曲</caption>
                             <thead>
                             <tr>
                                 <th>歌曲名称</th>
                                 <th>歌曲播放</th>
                                 <th>歌曲类型</th>
                                 <th>歌曲热度</th>
-                                <th>发表时间</th>
                                 <th>查看详情</th>
-                                {% if user == request.user %}
                                 <th>删除歌曲</th>
-                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
-                            {% for mu in music %}
+                            {% for music in music_list %}
                             <tr>
-                                <th>{{ mu.music_name }}</th>
+                                <th>{{ music.music_name }}</th>
                                 <th>
-                                    <a href="{{ mu.music_link }}">
-                                        <i class="el-icon-video-play" style="margin: 0 10px; font-size: 40px; color: green"></i>
+                                    <a href="{{ music.music_link }}">
+                                <div id="playBtn" class="circle" style="margin: 20px 0px 10px 20px;">
+			                            <div class="circle_inner_play">
+			                            </div>
+                                </div>
                                     </a>
                                 </th>
-                                <th>{{ mu.music_singing_type }}</th>
-                                <th>{{ mu.music_popularity }}</th>
-                                <th>{{ mu.music_public_time }}</th>
+                                <th>{{ music.music_singing_type }}</th>
+                                <th>{{ music.music_popularity }}</th>
                                 <th>查看详情</th>
-                                {% if user == request.user %}
-                                <th>删除歌曲</th>
-                                {% endif %}
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <hr>
-                        {% if is_singer %}
-
-                        <h2>歌手专辑</h2>
-
-                            {% if request.user == user %}
-                    <form action="{% url 'musics:Personal_View' %}?op_type=Add_Album" class="" method="post" autocomplete="off">
-                        {% csrf_token %}
-                        <div>
-                        <p class="fl"></p><input placeholder="请输入专辑名" name="album_name">
-                        </div>
-                        <div>
-                        <p class="fl"></p><input placeholder="请输入专辑类型" name="album_coverpage_pattern">
-                        </div>
-                        <div type="submit"><button type="submit" onclick="">
-                            <div id="app"><el-button type="primary" round >发布新专辑</el-button> </div></button>
-                        </div>
-                    </form>
-                        {% endif %}
-
-                        <table>
-                            <caption>拥有的专辑</caption>
-                            <thead>
-                            <tr>
-                                <th>专辑名称</th>
-                                <th>歌曲数量</th>
-                                <th>创建时间</th>
-                                <th>专辑热度</th>
-                                <th>查看详情</th>
-                                {% if user == request.user %}
-                                <th>删除专辑</th>
-                                {% endif %}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for album in albums %}
-                            <tr>
-                                <th>{{ album.album_name }}</th>
-                                <th>{{ album.album_music_num }}</th>
-                                <th>{{ album.album_created_time }}</th>
-                                <th>{{ album.album_popularity }}</th>
-                                <th><a href="{% url 'musics:Album_View' %}?album_id={{ album.album_id }}">
-                                    <i class="el-icon-document"></i>
-                                    </a></th>
-                                {% if user == request.user %}
-                                <th><form action="{% url 'musics:Personal_View' %}?op_type=Del_Album&album_id={{ album.album_id }}" method="post">
+                                <th><form action="{% url 'musics:Songsheet_View' %}?op_type=Del_Music_From_Album&album_id={{ album_id }}&music_id={{ music.music_id }}" method="post">
                                     {% csrf_token %}
                                     <button type="submit" onclick=""><i class="el-icon-delete"></i></button>
                                     </form></th>
-                                {% endif %}
                             </tr>
                             {% endfor %}
                             </tbody>
                         </table>
-
-                            <h2>发布新歌</h2>
-                        <table>
-                            <caption>发布的歌曲</caption>
-                            <thead>
-                            <tr>
-                                <th>歌曲名称</th>
-                                <th>歌曲播放</th>
-                                <th>歌曲类型</th>
-                                <th>歌曲热度</th>
-                                <th>发表时间</th>
-                                <th>查看详情</th>
-                                <th>点击收藏</th>
-                                {% if request.user == user %}
-                                <th>添加进专辑</th>
-                                {% endif %}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for mu in musics %}
-                            <tr>
-                                <th>{{ mu.music_name }}</th>
-                                <th>
-                                    <a href="{{ mu.music_link }}">
-                                        <i class="el-icon-video-play" style="margin: 0 10px; font-size: 40px; color: green"></i>
-                                    </a>
-                                </th>
-                                <th>{{ mu.music_singing_type }}</th>
-                                <th>{{ mu.music_popularity }}</th>
-                                <th>{{ mu.music_public_time }}</th>
-                                <th>查看详情</th>
-                                <th></th>
-                                {% if request.user == user %}
-                                <th>
-                                <form action="{% url 'musics:Personal_View' %}?op_type=Add_Music_To_Album&music_id={{ mu.music_id }}" method="post">
-                                    {% csrf_token %}
-                                    <select id="template" name="album_id">
-                                        {% for album in albums %}
-                                                   <option value="{{ album.album_id }}">{{ album.album_name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <button type="submit" onclick=""><i class="el-icon-circle-plus"></i></button>
-                                </form>
-                                </th>
-                                {% endif %}
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        {% endif %}
-
-                        <hr>
                         <h2>快捷导航</h2>
                         <div class="tool">
-                            <a href="{% url 'users:userinfo' %}"><div id="app"><el-button type="success" round>回到个人主页</el-button></div></a>
+                            <a href="{% url 'users:userindex'  user.user_id %}"><div id="app"><el-button type="success" plain>回到主界面</el-button></div></a>
                         </div>
                     </div>
                 </article>
@@ -454,7 +246,7 @@
         </main>
         <footer id="footer">
             <div id="footer-wrap">
-                <div class="copyright">我的资料主页</div>
+                <div class="copyright">{{ user.username }} 的歌单： {{ songsheet_name }}</div>
             </div>
         </footer>
     </div>

@@ -22,6 +22,7 @@ from django.contrib import staticfiles
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include(('users.urls', 'users'), namespace='users')),
+    path('musics/', include(('musics.urls', 'musics'), namespace='musics')),
 ]
 #设置静态文件路径
 urlpatterns += staticfiles_urlpatterns()

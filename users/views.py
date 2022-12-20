@@ -1,3 +1,5 @@
+import math
+
 from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from .forms import RegisterForm, LoginForm, PwdmodifyForm, ForgetpwdForm, UpUserInfoForm
@@ -11,12 +13,13 @@ from utils.mixin_utils import LoginRequiredMixin
 import re
 import json
 from django.core.exceptions import ObjectDoesNotExist
+from musics.models import User_Become_Singer,Songsheet_Information,User_Songsheet,User_Music,Singer_Music,Music_Information,Album_Information,Singer_Album
 
 class IndexView(View):
     """显示首页"""
 
     def get(self, request):
-        return render(request, 'users/../templates/cloudMusic/index.html')
+        return render(request, 'cloudMusic/index.html')
 
 
 class RegisterView(View):
@@ -113,7 +116,7 @@ class LoginView(View):
                 user = UserProfile.objects.get(username=login_user)
                 if user.password == login_password:
                     login(request,user)
-                    return redirect('../../cloudMusic/index.html')
+                    return render(request,'users/userinfo.html',{})
                 else:
                     return render(request,'users/login.html',{'msg':'用户密码错误'})
             except ObjectDoesNotExist as e:
@@ -215,7 +218,7 @@ class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        return redirect('../../cloudMusic/index.html')
+        return render(request,'users/login.html',{'msg': '请重新登陆'})
 
 
 class UserInfoView(View):
@@ -223,12 +226,87 @@ class UserInfoView(View):
 
     def get(self, request):
         """进入个人中心"""
-        user = request.user.username
+        user = request.user
         if not user:  # 未登录
             return render(request, 'users/login.html', {'pwdreset_msg': '您还未登录...'})
         else:
-            return render(request, 'users/userinfo.html')
+            musics = []
+            albums = []
+            try:
+                user_singer = User_Become_Singer.objects.get(user=user)
+                if user_singer:
+                    is_singer = True
+                else:
+                    user_singer = False
+                singer = user_singer.singer
+                singer_music = Singer_Music.objects.filter(singer=singer).values('music')
+                singer_album = Singer_Album.objects.filter(singer=singer).values('album')
 
+                for sm in singer_music:
+                    musics.append(Music_Information.objects.get(music_id=sm['music']))
+
+                for al in singer_album:
+                    albums.append(Album_Information.objects.get(album_id=al['album']))
+
+            except:
+                singer = {}
+                is_singer = False
+            songsheet = User_Songsheet.objects.filter(user=user)
+            music = User_Music.objects.filter(user=user)
+            songsheet_num = songsheet.count()
+            music_num = music.count()
+            return render(request, 'users/userinfo.html',{'singer':singer,'is_singer':is_singer,
+                                                          'songsheet_num':songsheet_num,'music_num':music_num,
+                                                          'musics':musics,'albums':albums,'music':music})
+
+class UserIndex(View):
+    """其他用户的个人资料"""
+
+    def get(self, request, user_id):
+        """进入个人中心"""
+        try:
+            user = UserProfile.objects.get(user_id=user_id)
+        except:
+            return render(request, 'users/login.html', {'pwdreset_msg': '您查询的用户不存在...'})
+        musics = []
+        albums = []
+        try:
+            user_singer = User_Become_Singer.objects.get(user=user)
+            is_singer = True
+            singer = user_singer.singer
+            singer_music = Singer_Music.objects.filter(singer=singer).values('music')
+            singer_album = Singer_Album.objects.filter(singer=singer).values('album')
+
+            for sm in singer_music:
+                musics.append(Music_Information.objects.get(music_id=sm['music']))
+
+            for al in singer_album:
+                albums.append(Album_Information.objects.get(album_id=al['album']))
+        except:
+            singer = {}
+            is_singer = False
+        user_songsheet = User_Songsheet.objects.filter(user=user)
+        songsheets = user_songsheet.values('songsheet')
+        songsheet = []
+        for sst in songsheets:
+            songsheet.append(Songsheet_Information.objects.get(songsheet_id=sst['songsheet']))
+        create_time = user_songsheet.values('create_time')
+        update_time = user_songsheet.values('update_time')
+        music = User_Music.objects.filter(user=user)
+        user_need_exp = math.pow(2,user.user_rank - 1) * 100
+        return render(request, 'users/userindex.html',{'user':user,'is_singer':is_singer,'singer':singer,'songsheet':songsheet,'music':music,'user_need_exp':user_need_exp,
+                                                       'musics':musics,'albums':albums})
+
+class CreateMusic(View):
+    def get(self,request):
+        user = request.user
+        try:
+            singer = User_Become_Singer.objects.get(user=user)
+            is_singer = True
+        except:
+            return render(request,'users/userinfo.html',{'msg':'您还不是一位歌手，请点击成为歌手，再发布歌曲'})
+
+        return render(request, 'users/create_music.html', {'singer': singer, 'is_singer': is_singer,'user':user})
 
 class UploadUserInfoView(LoginRequiredMixin, View):
     """个人中心的个人资料修改"""

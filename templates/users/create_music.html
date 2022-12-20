@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+    <title>个人中心</title>
+    <meta name="description" content="个人中心">
+    <meta name="keywords" content="云音乐 交流讨论">
+    <meta name="format-detection" content="telephone=no">
+    <style type="text/css">
+        /* Basic Grey */
+        .basic-grey {
+            margin-left:auto;
+            margin-right:auto;
+            max-width: 600px;
+            background: #F7F7F7;
+            padding: 25px 15px 25px 10px;
+            font: 12px Georgia, "Times New Roman", Times, serif;
+            color: #888;
+            text-shadow: 1px 1px 1px #FFF;
+            border:1px solid #E4E4E4;
+        }
+        .basic-grey h1 {
+            font-size: 25px;
+            padding: 0px 0px 10px 40px;
+            display: block;
+            border-bottom:1px solid #E4E4E4;
+            margin: -10px -15px 30px -10px;
+            color: #888;
+        }
+        .basic-grey h1>span {
+            display: block;
+            font-size: 11px;
+        }
+
+        .basic-grey label {
+            display: block;
+            margin: 0px;
+        }
+
+        .basic-grey label>span {
+            float: left;
+            width: 20%;
+            text-align: right;
+            padding-right: 10px;
+            margin-top: 10px;
+            color: #888;
+        }
+        .basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey textarea, .basic-grey select {
+            border: 1px solid #DADADA;
+            color: #888;
+            height: 30px;
+            margin-bottom: 16px;
+            margin-right: 6px;
+            margin-top: 2px;
+            outline: 0 none;
+            padding: 3px 3px 3px 5px;
+            width: 70%;
+            font-size: 12px;
+            line-height:15px;
+            box-shadow: inset 0px 1px 4px #ECECEC;
+            -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+            -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+        }
+        .basic-grey textarea{
+            padding: 5px 3px 3px 5px;
+        }
+        .basic-grey select {
+
+        /*         background: #FFF url('down-arrow.png') no-repeat right;*/
+        /*         background: #FFF url('down-arrow.png') no-repeat right);*/
+            appearance:none;
+            -webkit-appearance:none;
+            -moz-appearance: none;
+            text-indent: 0.01px;
+            text-overflow: '';
+            width: 70%;
+            height: 35px;
+            line-height: 25px;
+
+        }
+        .basic-grey textarea{
+            height:100px;
+        }
+        .basic-grey .button {
+            background: #E27575;
+            border: none;
+            padding: 10px 25px 10px 25px;
+            color: #FFF;
+            box-shadow: 1px 1px 5px #B6B6B6;
+            border-radius: 3px;
+            text-shadow: 1px 1px 1px #9E3F3F;
+            cursor: pointer;
+        }
+        .basic-grey .button:hover {
+            background: #CF7A7A
+        }
+    </style>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="../../static/css/playmusic.css">
+    <link rel="stylesheet" href="../../static/css/userindex.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.fancybox@2.1.5/source/jquery.fancybox.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <script type="text/javascript">
+        if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
+            alert('朋友，上古浏览器不支持呢~');
+        }
+    </script>
+</head>
+<body>
+    <div id="body-wrap">
+        <nav class="not_index_bg" id="nav" style="background-image:url(https://api.ixiaowai.cn/api/api.php)">
+            <div id="page_site-info">
+                <div id="site-title">
+                    <span class="blogtitle"></span>
+                    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
+                    <script>
+                        var typed = new Typed(".blogtitle", {
+                            strings: ['求知若饥，虚心若愚', 'Stay Hungry Stay Foolish'],
+                            startDelay: 300,
+                            typeSpeed: 100,
+                            loop: true,
+                            backSpeed: 50,
+                            showCursor: true
+                        });
+                    </script>
+                </div>
+            </div>
+        </nav>
+        <main id="content-outer">
+            <div class="layout_page" id="content-inner">
+                <div class="aside_content" id="aside_content">
+                    <div class="card-widget card-info">
+                        <div class="card-content">
+                            <div class="card-info-avatar is-center">
+                                <img class="avatar-img"
+                                    src="https://www.iculture.cc/icon/logo.png"
+                                    alt="avatar">
+                                <div class="author-info__name">真ikun</div>
+                                <div class="author-info__description">擅长唱，跳，rap，篮球 ，练习时长<s>两年半</s>的个人练习生</div>
+                            </div>
+                            <div class="card-info-social-icons is-center">
+                                <a class="social-icon" href="#" target="_blank">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-widget card-announcement">
+                        <div class="card-content">
+                            <div class="item-headline">
+                                <i class="fa fa-bullhorn" aria-hidden="true"></i>
+                                <span>每日任务</span>
+                            </div>
+                            <div id="hitokoto"></div>
+                        </div>
+                    </div>
+                    <div class="card-widget card-announcement">
+                        <div class="card-content">
+                            <div class="item-headline">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                <span>今日诗词</span>
+                            </div>
+                            <div id="jinrishici-sentence"></div>
+                        </div>
+                    </div>
+
+                    <div class="card-widget card-webinfo">
+                        <div class="card-content">
+                            <div class="item-headline">
+                                <i class="fa fa-line-chart" aria-hidden="true"></i>
+                                <span>个人信息</span>
+                            </div>
+                            <div class="webinfo">
+                                <div class="webinfo-item">
+                                    <div class="webinfo-site-uv-name">用户等级 :</div>
+                                    <div>{{ request.user.user_rank }}</div>
+                                </div>
+                                <div class="webinfo-item">
+                                    <div class="webinfo-site-name">用户经验 :</div>
+                                    <div>{{ request.user.user_exp }}</div>
+                                </div>
+                                <div class="webinfo-item">
+                                    <div class="webinfo-site-name">是否为歌手 :</div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
+                                        {% if singer %}
+                                            是
+                                            {% else %}
+                                            否
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div>
+                                    {% if singer %}
+                                <div class="webinfo-item">
+                                    <div class="webinfo-site-name">歌手姓名</div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
+                                        {{ singer.singer_name }}
+                                    </div>
+                                </div>
+                                <div class="webinfo-item">
+                                    <div class="webinfo-site-name">歌手年龄</div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
+                                        {{ singer.singer_age }}
+                                    </div>
+                                </div>
+                                        <div class="webinfo-item">
+                                    <div class="webinfo-site-name">歌手性别</div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
+                                        {{ singer.singer_sex }}
+                                    </div>
+                                        </div>
+
+                                    <div class="webinfo-item">
+                                    <div class="webinfo-site-name">歌手国籍</div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
+                                        {{ singer.singer_nationality }}
+                                    </div>
+                                    </div>
+
+                                    <div class="webinfo-item">
+                                    <div class="webinfo-site-name">歌手热度</div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
+                                        {{ singer.singer_popularity }}
+                                    </div>
+                                    </div>
+
+                                        <div class="webinfo-item">
+                                    <div class="webinfo-site-name">歌手出道时间</div>
+                                    <div class="webinfo-site-pv-count" id="busuanzi_value_site_pv">
+                                        {{ singer.singer_debut_time }}
+                                    </div>
+                                        </div>
+                                {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <article id="page">
+                    <div class="article-container">
+
+                        <hr>
+                        <h2>发布新歌</h2>
+                        <form action="{% url 'musics:Personal_View' %}?op_type=Sing_Song" method="post">
+                            {% csrf_token %}
+                             <div  class="basic-grey">
+                                 <h1>歌曲信息表      Music publish
+                                          <span>Please fill all the texts in the fields.</span>
+                                 </h1>
+                                 <label>
+                                          <span>歌曲名称 ： </span>
+                                          <input id="port" type="text" name="music_name" placeholder="your song's name" />
+                                 </label>
+                                 <label>
+                                          <span>歌曲类型 ： </span>
+                                          <select id="template" name="music_singing_type" οnchange="changeStyle();">
+                                                   <option value="solo">独唱</option>
+                                                   <option value="antiphon">对唱</option>
+                                                   <option value="chorus">合唱</option>
+                                          </select>
+                                 </label>
+                                 <label>
+                                          <span>歌曲链接 </span>
+                                          <input id="ip" type="text" name="music_link" placeholder="song link" />
+                                 </label>
+                                 <label>
+                                          <span>歌曲类型 ： </span><select name="music_theme">
+                                                   <option value="History">历史</option>
+                                                   <option value="Anecdote">轶事</option>
+                                                    <option value="Emotion">情感</option>
+                                                   <option value="Game">游戏</option>
+                                                    <option value="Encouragement">激情</option>
+                                                   <option value="Nation">国风</option>
+                                                    <option value="Other">其他</option>
+                                          </select>
+                                 </label>
+
+                                 <label>
+                                          <span>&nbsp;</span>
+                                     <button type="submit" class="button">提交</button>
+                                 </label>
+                              </div>
+                         </form>
+
+                        <h2>快捷导航</h2>
+                        <div class="tool">
+                            <a href="{% url 'users:userinfo' %}"><div id="app"><el-button type="success" plain>回到主界面</el-button></div></a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </main>
+        <footer id="footer">
+            <div id="footer-wrap">
+                <div class="copyright">{{ user.username }} 的歌单： {{ songsheet_name }}</div>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.fancybox@2.1.5/source/jquery.fancybox.js"></script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/instant.page@3.0.0/instantpage.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.0/lazysizes.min.js" async></script>
+    <!-- aplayer、meting -->
+    <!-- require APlayer -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+    <!-- require MetingJS -->
+    <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    <!-- nplayer -->
+    <script src="https://unpkg.com/nplayer@latest/dist/index.min.js"></script>
+
+    <!--   一言、今日诗词   -->
+    <script src="https://v1.hitokoto.cn/?encode=js&select=%23hitokoto" defer></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+
+    <!-- 看板娘 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+
+    <!--鼠标点击效果-->
+    <script src="https://cdn.jsdelivr.net/gh/TRHX/CDN-for-itrhx.com@3.0.8/js/maodian.js"></script>
+
+    <script type="text/javascript">
+        console.clear();
+        console.log("%c 有朋自远方来, 不亦说乎.", "background:#24272A; color:#ffffff", "");
+
+
+        (function ($) {
+            $.fn.snow = function (options) {
+                var $flake = $('<div id="snowbox" />').css({ 'position': 'absolute', 'z-index': '9999', 'top': '-50px' }).html('&#10052;'),
+                    documentHeight = $(document).height(),
+                    documentWidth = $(document).width(),
+                    defaults = {
+                        minSize: 10,
+                        maxSize: 20,
+                        newOn: 1000,
+                        flakeColor: "#AFDAEF" /* 此处可以定义雪花颜色，若要白色可以改为#FFFFFF */
+                    },
+                    options = $.extend({}, defaults, options);
+                var interval = setInterval(function () {
+                    var startPositionLeft = Math.random() * documentWidth - 100,
+                        startOpacity = 0.5 + Math.random(),
+                        sizeFlake = options.minSize + Math.random() * options.maxSize,
+                        endPositionTop = documentHeight - 200,
+                        endPositionLeft = startPositionLeft - 500 + Math.random() * 500,
+                        durationFall = documentHeight * 10 + Math.random() * 5000;
+                    $flake.clone().appendTo('body').css({
+                        left: startPositionLeft,
+                        opacity: startOpacity,
+                        'font-size': sizeFlake,
+                        color: options.flakeColor
+                    }).animate({
+                        top: endPositionTop,
+                        left: endPositionLeft,
+                        opacity: 0.2
+                    }, durationFall, 'linear', function () {
+                        $(this).remove()
+                    });
+                }, options.newOn);
+            };
+        })(jQuery);
+        $(function () {
+            $.fn.snow({
+                minSize: 5, /* 定义雪花最小尺寸 */
+                maxSize: 50,/* 定义雪花最大尺寸 */
+                newOn: 800  /* 定义密集程度，数字越小越密集 */
+            });
+        });
+
+        // 浏览器搞笑标题
+        var OriginTitle = document.title;
+        var titleTime;
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                // $('[rel="icon"]').attr('href', "/funny.ico");
+                document.title = '╭(°A°`)╮ 页面崩溃啦 ~';
+                clearTimeout(titleTime);
+            }
+            else {
+                $('[rel="icon"]').attr('href', "/favicon.ico");
+                document.title = '(ฅ>ω<*ฅ) 噫又好啦 ~' + OriginTitle;
+                titleTime = setTimeout(function () {
+                    document.title = OriginTitle;
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+
+</html>
+            <script>
+             function changeStyle() {
+                var template = document.getElementById("template");
+                var index = template.selectedIndex;
+                var templatevalue = template.options[index].value;
+                var templatecss = document.getElementById("templatecss");
+                templatecss.setAttribute("href","css/" + templatevalue + ".css");
+                document.getElementsByTagName("form")[0].setAttribute("class",templatevalue);
+            }
+            </script>
+
+<script>
+    new Vue({
+        el: '#app',
+            })
+</script>

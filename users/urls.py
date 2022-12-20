@@ -24,4 +24,8 @@ urlpatterns = [
     path('pwdmodify/', views.PwdmodifyView.as_view(), name='pwdmodify'),
     # 注销登录/登出
     path('logout/', views.LogoutView.as_view(), name='logout'),
+    # 用户个人资料界面
+    path('userindex/<int:user_id>', views.UserIndex.as_view(), name='userindex'),
+    # 歌手写歌界面
+    path('create_music/',views.CreateMusic.as_view(),name='create_music'),
 ]

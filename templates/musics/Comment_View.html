@@ -1,25 +1,282 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>cloudMusic_master</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/images/girl.png">
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/movie.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.fancybox@2.1.5/source/jquery.fancybox.css">
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-<!-- 引入组件库 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <style type="text/css">
+        /* Basic Grey */
+        .basic-grey {
+            margin-left:auto;
+            margin-right:auto;
+            max-width: 600px;
+            background: #F7F7F7;
+            padding: 25px 15px 25px 10px;
+            font: 12px Georgia, "Times New Roman", Times, serif;
+            color: #888;
+            text-shadow: 1px 1px 1px #FFF;
+            border:1px solid #E4E4E4;
+        }
+        .basic-grey h1 {
+            font-size: 25px;
+            padding: 0px 0px 10px 40px;
+            display: block;
+            border-bottom:1px solid #E4E4E4;
+            margin: -10px -15px 30px -10px;
+            color: #888;
+        }
+        .basic-grey h1>span {
+            display: block;
+            font-size: 11px;
+        }
+
+        .basic-grey label {
+            display: block;
+            margin: 0px;
+        }
+
+        .basic-grey label>span {
+            float: left;
+            width: 20%;
+            text-align: right;
+            padding-right: 10px;
+            margin-top: 10px;
+            color: #888;
+        }
+        .basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey textarea, .basic-grey select {
+            border: 1px solid #DADADA;
+            color: #888;
+            height: 30px;
+            margin-bottom: 16px;
+            margin-right: 6px;
+            margin-top: 2px;
+            outline: 0 none;
+            padding: 3px 3px 3px 5px;
+            width: 70%;
+            font-size: 12px;
+            line-height:15px;
+            box-shadow: inset 0px 1px 4px #ECECEC;
+            -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+            -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+        }
+        .basic-grey textarea{
+            padding: 5px 3px 3px 5px;
+        }
+        .basic-grey select {
+
+        /*         background: #FFF url('down-arrow.png') no-repeat right;*/
+        /*         background: #FFF url('down-arrow.png') no-repeat right);*/
+            appearance:none;
+            -webkit-appearance:none;
+            -moz-appearance: none;
+            text-indent: 0.01px;
+            text-overflow: '';
+            width: 70%;
+            height: 35px;
+            line-height: 25px;
+
+        }
+        .basic-grey textarea{
+            height:100px;
+        }
+        .basic-grey .button {
+            background: #E27575;
+            border: none;
+            padding: 10px 25px 10px 25px;
+            color: #FFF;
+            box-shadow: 1px 1px 5px #B6B6B6;
+            border-radius: 3px;
+            text-shadow: 1px 1px 1px #9E3F3F;
+            cursor: pointer;
+        }
+        .basic-grey .button:hover {
+            background: #CF7A7A
+        }
+    </style>
+
 </head>
 <body>
+<header class="header">
+    <div class="container">
+        <!--logo-->
+        <a href="{% url 'musics:Music_Information_View' %}" class="logo"></a>
+        <!--导航标签-->
+        <div class="nav">
+            <ul class="navbar">
+                <li><a href="{% url 'musics:Music_Information_View' %}">首页</a></li>
+            </ul>
+        </div>
 
-<el-input v-model="input" placeholder="请输入内容"></el-input>
+        <!--用户登陆注册-->
+        <div class="user">
+            {% if not request.user %}
+                <div class="userout">
+                    <a href="{% url 'users:login' %}" class="login cur">登录</a>
+                    <a href="{% url 'users:register' %}" class="register cur">注册</a>
+                </div>
+            {% else %}
+                <div class="userout">
+                    <a href="{% url 'users:userinfo' %}">个人中心</a>
+                </div>
+            {% endif %}
+        </div>
+
+
+    </div>
+</header>
+<div class="content">
+    <div class="body-bg"></div>
+    <div class="container">
+        <h1 style="text-align: center">对主题为 {{ comment_theme }} 的评论</h1>
+                            <form action="{% url 'musics:Comment_View' %}?comment_id={{ comment_id }}&music_id={{ music_id }}&op_type=add_feedback" id="add_comment" method="POST">
+                                {% csrf_token %}
+                                <div  class="basic-grey">
+                                <h1>增加回帖      Feedbacks
+                                          <p><span>Please fill all the texts in the fields.</span></p>
+                                 </h1>
+                                 <label>
+                                          <span>回帖主题 ： </span>
+                                          <input id="port" type="text" name="feedback_theme" placeholder="your feedback's theme" />
+                                 </label>
+                                 <label>
+                                          <span>回帖内容 ： </span>
+                                          <textarea id="message" name="feedback_content" placeholder="Your feedback to the content"></textarea>
+                                 </label>
+
+                                 <label>
+                                          <span>&nbsp;</span>
+                                     <button type="submit" class="button">提交</button>
+                                 </label>
+                                </div>
+                            </form>
+</div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="link-nav">
+            <ul>
+                <li><a href="javascript:;">关于音乐馆</a></li>
+                <li><a href="javascript:;">加入我们</a></li>
+                <li><a href="javascript:;">联系我们</a></li>
+                <li><a href="javascript:;">隐私政策</a></li>
+                <li><a href="javascript:;">问题反馈</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<div id="toTop"></div>
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+    window.onload = function () {
+        setPage("movie.html");
+        initPublic();
+        initScrollToTop();
+    };
+</script>
+
+</body>
+</html>
+<script>
+    new Vue({
+        el: '#app',
+    })
+</script>
+            <script>
+             function changeStyle() {
+                var template = document.getElementById("template");
+                var index = template.selectedIndex;
+                var templatevalue = template.options[index].value;
+                var templatecss = document.getElementById("templatecss");
+                templatecss.setAttribute("href","css/" + templatevalue + ".css");
+                document.getElementsByTagName("form")[0].setAttribute("class",templatevalue);
+            }
+            </script>
 
 <script>
-export default {
-  data() {
-    return {
-      input: ''
+    // 点击按钮
+    var button = document.getElementById("button");
+    var modal = document.getElementById("modal")
+    button.onclick = function () {
+        modal.style.display = "block";
+    };
+    //   关闭按钮
+    document.getElementById("close").onclick = function () {
+        modal.style.display = "none";
+    };
+    //   点击其他领域(即弹窗背景)
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none"
+        }
     }
-  }
-}
 </script>
-</body>
+<script>
+    // 点击按钮
+    var button = document.getElementById("button");
+    var modal = document.getElementById("modal")
+    button.onclick = function () {
+        modal.style.display = "block";
+    };
+    //   关闭按钮
+    document.getElementById("close").onclick = function () {
+        modal.style.display = "none";
+    };
+    //   点击其他领域(即弹窗背景)
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none"
+        }
+    }
+</script>
 
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-</html>
+ <script>
+        // 点击按钮
+      var button = document.getElementById("button1");
+      var modal = document.getElementById("modal")
+      button.onclick = function () {
+        modal.style.display = "block";
+      };
+    //   关闭按钮
+      document.getElementById("close").onclick = function () {
+            modal.style.display = "none";
+      };
+    //   点击其他领域(即弹窗背景)
+    window.onclick = function(event){
+        if(event.target ==modal){
+                modal.style.display = "none"
+        }
+    }
+    </script>
+
+<script>
+    function submitAdd() {
+        document.getElementById("add_comment_id").value = {{ music_id }};
+        document.getElementById("add_comment_grade").value = 1;
+        document.getElementById("add_comment_type").value = "add_comment"
+        document.getElementById("add_comment").submit();
+        if({{ status }} == "success")  //提交成功{
+        {
+            alert({{ msg }})
+        }
+    }
+
+    function submitDel(a){
+        document.getElementById("del_music_id").value = {{ music_id }};
+        document.getElementById("del_comment_id").value = a;
+        document.getElementById("del_comment").submit();
+        if({{ status }} == "success")  //提交成功{
+        {
+            alert({{ msg }})
+        }
+    }
+</script>

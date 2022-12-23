@@ -160,8 +160,31 @@ class Music_View(View):
 
         music_comment_list = User_Comment_Music.objects.filter(target_music=music).values('comment')
         comment_list = []
+        user_list = []
+        feedback_list = []
         for music_comment in music_comment_list:
-            comment_list.append(Comment_Information.objects.get(comment_id=music_comment['comment']))
+            comment = Comment_Information.objects.get(comment_id=music_comment['comment'])
+            comment_user_feedback = User_Feedback_Comment.objects.filter(comment=comment)
+
+            user_feedback_list = []
+            users__ = comment_user_feedback.values('user')
+            for us in users__:
+                user_feedback_list.append(UserProfile.objects.get(user_id=us['user']))
+
+            feed_feedback_list = []
+            feed__ = comment_user_feedback.values('feedback')
+            for fe in feed__:
+                feed_feedback_list.append(Feedback_Information.objects.get(feedback_id=fe['feedback']))
+
+            time_feedback_list = []
+            time__ = comment_user_feedback.values('feedback_time')
+            for ti in time__:
+                time_feedback_list.append(ti['feedback_time'])
+            feedback_list.append(zip(feed_feedback_list,user_feedback_list,time_feedback_list))
+            comment_list.append(comment)
+            user_comment = User_Comment_Music.objects.get(comment=comment).user
+            user_list.append(user_comment)
+        comment_user = zip(comment_list,user_list,feedback_list)
 
         singer_music = Singer_Music.objects.get(music=music)
         writer = singer_music.singer
@@ -183,6 +206,7 @@ class Music_View(View):
             'writer': writer,
             'user':user,
             'is_liked':is_liked,
+            'comment_user':comment_user,
         })
 
     # 操作1：添加或删除评论
@@ -197,6 +221,7 @@ class Music_View(View):
             return HttpResponse(json.dumps(res), content_type='application/json')
 
         op_type = request.GET.get('op_type', '')
+        music_id = request.GET.get('music_id','')
 
         if op_type in ['add_comment', 'del_comment', 'add_fav_list', 'del_fav_list']:
             if op_type == 'add_comment':
@@ -207,13 +232,11 @@ class Music_View(View):
                 res = self.__add_fav_list(request)
             else:
                 res = self.__del_fav_list(request)
-            return HttpResponse(json.dumps(res), content_type='application/json')
+            return HttpResponseRedirect('/musics/Music_View/?music_id=' + music_id)
 
         if op_type == 'check_comment':
             comment_id = request.POST.get('comment_id', '')
-            return render(request, 'musics/Comment_View.html', {
-                'comment_id': comment_id,
-            })
+            return HttpResponseRedirect('/musics/Music_View/?music_id=' + music_id)
 
     # 对该歌曲进行评论
     def __add_comment(self, request):
@@ -310,7 +333,15 @@ class Singer_Information_View(View):
 
         singer_list = Singer_Information.objects.all()
         hot_singer_list = singer_list.order_by('-singer_popularity')[:5]
+        hot_user_list = []
+        for hsl in hot_singer_list:
+            hot_user_list.append(User_Become_Singer.objects.get(singer=hsl))
+        hot_singer_list = zip(hot_singer_list,hot_user_list)
         new_singer_list = singer_list.order_by('-singer_debut_time')[:5]
+        new_user_list = []
+        for nsl in new_singer_list:
+            new_user_list.append(User_Become_Singer.objects.get(singer=nsl))
+        new_singer_list = zip(new_singer_list,new_user_list)
         singer_num = singer_list.count()
 
         sort = request.GET.get('sort', '')
@@ -447,7 +478,7 @@ class Singer_View(View):
             res['msg'] = '用户未登录'
             return HttpResponse(json.dumps(res), content_type='application/json')
 
-        op_type = request.POST.get('op_type', '')
+        op_type = request.GET.get('op_type', '')
 
         if op_type in ['add_comment', 'del_comment', 'add_fav_list', 'del_fav_list']:
             if op_type == 'add_comment':
@@ -710,6 +741,7 @@ class Comment_View(View):
     def get(self, request):
 
         comment_id = request.GET.get('comment_id', '')
+        music_id = request.GET.get('music_id','')
         comment = Comment_Information.objects.get(comment_id=comment_id)
 
         comment_theme = comment.comment_theme
@@ -729,28 +761,17 @@ class Comment_View(View):
         p = Paginator(feedback_list, 10, request=request)
         feedback_pages = p.page(page)
 
-        exist_singer_record = User_Comment_Singer.objects.get(comment=comment)
-        if exist_singer_record:
-            author = exist_singer_record.user.user_id
-            singer = exist_singer_record.singer
-            name = singer.singer_name
 
-        else:
-            exist_music_record = User_Comment_Music.objects.get(comment=comment)
-            author = exist_music_record.user.user_id
-            music = exist_music_record.music
-            name = music.music_name
-
-        return render(request, 'Comment_View.html', {
+        return render(request, 'musics/Comment_View.html', {
+            'comment_id': comment_id,
+            'music_id': music_id,
             'comment_theme': comment_theme,
             'comment_grade': comment_grade,
             'comment_content': comment_content,
             'comment_time': comment_time,
             'target': 'musics',
-            'name': name,
             'feedback_page': feedback_pages,
             'feedback_num': len(feedback_list),
-            'auther': author,
         })
 
     # 操作1：添加或删除回帖
@@ -759,21 +780,22 @@ class Comment_View(View):
     def post(self, request):
 
         res = dict()
+        music_id = request.GET.get('music_id','')
         if not request.user.is_authenticated:
             res['status'] = 'fail'
             res['msg'] = '用户未登录'
             return HttpResponse(json.dumps(res), content_type='application/json')
 
-        op_type = request.POST.get('op_type', '')
+        op_type = request.GET.get('op_type', '')
 
         if op_type in ['add_feedback', 'del_feedback']:
             if op_type == 'add_feedback':
                 ret = self.__add_feedback(request)
             else:
                 ret = self.__del_feedback(request)
-            return HttpResponse(json.dumps(ret), content_type='application/json')
+            return HttpResponseRedirect('/musics/Music_View/?music_id=' + music_id)
 
-        comment_id = request.POST.get('comment_id', '')
+        comment_id = request.GET.get('comment_id', '')
         comment = Comment_Information.objects.get(comment_id=comment_id)
         exist_music_record = User_Comment_Music.objects.get(comment=comment)
         exist_singer_record = User_Comment_Singer.objects.get(comment=comment)
@@ -804,7 +826,7 @@ class Comment_View(View):
     # 添加回帖
     def __add_feedback(self, request):
 
-        comment_id = request.POST.get('comment_id', '')
+        comment_id = request.GET.get('comment_id', '')
         comment = Comment_Information.objects.get(comment_id=comment_id)
 
         feedback = Feedback_Information()

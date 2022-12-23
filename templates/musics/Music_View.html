@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>cloudMusic_master</title>
+
     <link rel="shortcut icon" type="image/x-icon" href="../../static/images/girl.png">
     <link rel="stylesheet" type="text/css" href="../../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/movie.css">
@@ -11,6 +12,96 @@
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <style type="text/css">
+        /* Basic Grey */
+        .basic-grey {
+            margin-left:auto;
+            margin-right:auto;
+            max-width: 600px;
+            background: #F7F7F7;
+            padding: 25px 15px 25px 10px;
+            font: 12px Georgia, "Times New Roman", Times, serif;
+            color: #888;
+            text-shadow: 1px 1px 1px #FFF;
+            border:1px solid #E4E4E4;
+        }
+        .basic-grey h1 {
+            font-size: 25px;
+            padding: 0px 0px 10px 40px;
+            display: block;
+            border-bottom:1px solid #E4E4E4;
+            margin: -10px -15px 30px -10px;
+            color: #888;
+        }
+        .basic-grey h1>span {
+            display: block;
+            font-size: 11px;
+        }
+
+        .basic-grey label {
+            display: block;
+            margin: 0px;
+        }
+
+        .basic-grey label>span {
+            float: left;
+            width: 20%;
+            text-align: right;
+            padding-right: 10px;
+            margin-top: 10px;
+            color: #888;
+        }
+        .basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey textarea, .basic-grey select {
+            border: 1px solid #DADADA;
+            color: #888;
+            height: 30px;
+            margin-bottom: 16px;
+            margin-right: 6px;
+            margin-top: 2px;
+            outline: 0 none;
+            padding: 3px 3px 3px 5px;
+            width: 70%;
+            font-size: 12px;
+            line-height:15px;
+            box-shadow: inset 0px 1px 4px #ECECEC;
+            -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+            -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+        }
+        .basic-grey textarea{
+            padding: 5px 3px 3px 5px;
+        }
+        .basic-grey select {
+
+        /*         background: #FFF url('down-arrow.png') no-repeat right;*/
+        /*         background: #FFF url('down-arrow.png') no-repeat right);*/
+            appearance:none;
+            -webkit-appearance:none;
+            -moz-appearance: none;
+            text-indent: 0.01px;
+            text-overflow: '';
+            width: 70%;
+            height: 35px;
+            line-height: 25px;
+
+        }
+        .basic-grey textarea{
+            height:100px;
+        }
+        .basic-grey .button {
+            background: #E27575;
+            border: none;
+            padding: 10px 25px 10px 25px;
+            color: #FFF;
+            box-shadow: 1px 1px 5px #B6B6B6;
+            border-radius: 3px;
+            text-shadow: 1px 1px 1px #9E3F3F;
+            cursor: pointer;
+        }
+        .basic-grey .button:hover {
+            background: #CF7A7A
+        }
+    </style>
+
 </head>
 <body>
 <header class="header">
@@ -27,25 +118,24 @@
         <!--用户登陆注册-->
         <div class="user">
             {% if not request.user %}
-            <div class="userout">
-                <a href="{%  url 'users:login' %}" class="login cur">登录</a>
-                <a href="{%  url 'users:register' %}" class="register cur">注册</a>
-            </div>
+                <div class="userout">
+                    <a href="{% url 'users:login' %}" class="login cur">登录</a>
+                    <a href="{% url 'users:register' %}" class="register cur">注册</a>
+                </div>
             {% else %}
-            <div class="userout">
-                <a href="{%  url 'users:userinfo' %}">个人中心</a>
-            </div>
+                <div class="userout">
+                    <a href="{% url 'users:userinfo' %}">个人中心</a>
+                </div>
             {% endif %}
         </div>
 
 
     </div>
 </header>
-
 <div class="content">
     <div class="body-bg"></div>
     <div class="container">
-        <!-- 电影信息栏 -->
+        <!-- 音乐信息栏 -->
         <div class="movie-info-bar clearboth">
             <div class="movie-poster">
                 <img src="../../static/images/music.png" alt="">
@@ -61,13 +151,13 @@
                         <p>歌手：<span>{{ writer.singer_name }}</span></p>
                     </li>
                     <li>
-                        <p><a href="{% url 'users:userindex' user.user_id %}">点击查看歌手主页 </a> </p>
+                        <p><a href="{% url 'users:userindex' user.user_id %}">点击查看歌手主页 </a></p>
                     </li>
                     <li>
                         <p>类型：<span>{{ music_singing_type }}</span></p>
                     </li>
                     <li>
-                        <p>时长：<span>{{music_duration}} 分钟</span></p>
+                        <p>时长：<span>{{ music_duration }} 分钟</span></p>
                     </li>
                     <li>
                         <p>链接：<a href="{{ music_link }}">{{ music_link }}</a></p>
@@ -75,33 +165,31 @@
 
 
                     {% if is_liked %}
-                    <li>
-                        <p>取消收藏</p>
-                    </li><li>
-                        <a href="{% url 'musics:Music_View' %}?op_type=del_fav_list&music_id={{ music_id }}">
-                            <div id="app"><i class="el-icon-star-on" style="font-size: 50px;"></i></div>
-                        </a>
-                    </li><li>
-                        <p>（已收藏）</p>
-                    </li>
+                        <li>
+                            <p>取消收藏</p>
+                        </li>
+                        <li>
+                            <a href="{% url 'musics:Music_View' %}?op_type=del_fav_list&music_id={{ music_id }}">
+                                <div id="app"><i class="el-icon-star-on" style="font-size: 50px;"></i></div>
+                            </a>
+                        </li>
+                        <li>
+                            <p>（已收藏）</p>
+                        </li>
                     {% else %}
-                    <li>
-                        <p>点击收藏</p>
-                    </li><li>
-                        <a href="{% url 'musics:Music_View' %}?op_type=add_fav_list&music_id={{ music_id }}">
-                            <div id="app"><i class="el-icon-star-off" style="font-size: 50px;"></i></div>
-                        </a>
-                    </li><li>
-                        <p>（未收藏）</p>
-                    </li>
+                        <li>
+                            <p>点击收藏</p>
+                        </li>
+                        <li>
+                            <a href="{% url 'musics:Music_View' %}?op_type=add_fav_list&music_id={{ music_id }}">
+                                <div id="app"><i class="el-icon-star-off" style="font-size: 50px;"></i></div>
+                            </a>
+                        </li>
+                        <li>
+                            <p>（未收藏）</p>
+                        </li>
                     {% endif %}
                 </ul>
-                <div class="movie-wish-grade-btn clearboth">
-                    <a href="javascript:;" class="movie-grade-btn flexcenter ">
-                        <i></i>
-                        <span>评分</span>
-                    </a>
-                </div>
             </div>
             <div class="movie-grade-box">
                 <ul>
@@ -112,59 +200,116 @@
         </div>
 
 
-
-        <!-- 电影主要栏 -->
+        <!-- 音乐主要栏 -->
         <div class="movie-main-container clearboth">
             <!-- 左边 -->
             <div class="main-content">
                 <div class="tab-subtitle">
-                    <a href="javascript:;" class="active">已有评论</a>
-                    <a onclick="f1()" href="javascript:;" class="active1">添加评论</a>
 
+                    <a href="javascript:;" class="active" onclick="">已有评论</a>
+
+                    <a class="active1" onclick="handleClick()" id="button">添加评论</a>
+
+                    <!-- 弹窗背景 -->
+                    <!-- 弹窗背景 -->
+                    <div id="modal" style="display: none">
+                        <!-- 弹窗 -->
+                            <span id="close"><i class="el-icon-error" style="font-size: 30px;color: #ac2925"> </i> </span>
+                            <h1 style="text-align: center">评论</h1>
+                            <form action="{% url 'musics:Music_View' %}?op_type=add_comment&music_id={{ music_id }}" id="add_comment" method="POST">
+                                {% csrf_token %}
+                                <div  class="basic-grey">
+                                <h1>增加评论      Comments
+                                          <p><span>Please fill all the texts in the fields.</span></p>
+                                 </h1>
+                                 <label>
+                                          <span>评论主题 ： </span>
+                                          <input id="port" type="text" name="comment_theme" placeholder="your comment's theme" />
+                                 </label>
+                                 <label>
+                                          <span>对歌曲的评价 ： </span>
+                                          <select id="template" name="music_singing_type" οnchange="changeStyle();">
+                                                   <option value="Positive">很好</option>
+                                                   <option value="Normal">一般</option>
+                                                   <option value="Negative">很差</option>
+                                          </select>
+                                 </label>
+                                 <label>
+                                          <span>评论内容 ： </span>
+                                          <textarea id="message" name="comment_content" placeholder="Your comment to the song"></textarea>
+                                 </label>
+
+                                 <label>
+                                          <span>&nbsp;</span>
+                                     <button type="submit" class="button">提交</button>
+                                 </label>
+                                </div>
+                            </form>
+                        </div>
                 </div>
-            <ul>
 
-                {% for comment in comment_list %}
-                    <li>
-                        <div class="photo">{{ comment.comment_id }}</div>
-                              <div class="text">
+
+                <ul>
+
+                    {% for comment,user,feedbacks in comment_user%}
+                        <li>
+                            评论：<i class="el-icon-folder" style="font-size: 25px;"></i>
+                            <div class="text">
+                                <div class="title">评论用户：{{ user.user_nickname }}</div>
                                 <div class="title">
-                                  <div>{{ comment.comment_theme }}</div>
-                                  <div>{{ comment.comment_time }}</div>
-                                </div>
+                                    评论主题： {{ comment.comment_theme }}</div>
+                                <div class="title">
+                                    评论时间： {{ comment.comment_time }}</div>
                                 <div class="content">
-                                  {{ comment.comment_content }}
+                                    评论内容：
+                                    {{ comment.comment_content }}
                                 </div>
-                                  <br>
-                                  <a href="javascript:;" class="movie-wish-btn flexcenter fl">
+                                <br>
+                                <a href="{% url 'musics:Comment_View' %}?music_id={{ music_id }}&comment_id={{ comment.comment_id }}" class="movie-wish-btn flexcenter fl" id="button1">
                                     <i></i>
+                                    <i class="el-icon-edit-outline" style="font-size: 25px;"></i>
                                     <span>回复评论</span>
-
                                 </a>
-                                <a href="javascript:;" class="movie-grade-btn flexcenter fl">
-                                    <i></i>
-                                    <span>删除评论</span>
+
+                                    {% for feed_feedback_list,user_feedback_list,time_feedback_list in feedbacks %}
+                                        <br><br>
+                                        回帖：<i class="el-icon-folder-add" style="font-size: 25px;"></i>
+                                        <div class="text">
+                                            <div class="title">回帖用户：{{ user_feedback_list.user_nickname }}</div>
+                                            <div class="title">
+                                            回帖主题：{{ feed_feedback_list.feedback_theme }}</div>
+                                            <div class="title">
+                                            回帖时间：{{ time_feedback_list }}</div>
+                                            <div class="content">
+                                                回帖内容：
+                                                {{ feed_feedback_list.feedback_content }}
+                                            </div>
+                                        <br>
+                                        </div>
+                                        {% endfor %}
                                 </a>
-                              </div>
-                            <div class="item"> </div>
+                            </div>
+                            <div class="item"></div>
 
-                    </li>
+                        </li>
 
-                  {% endfor %}
+                    {% endfor %}
 
 
-            </ul>
+                </ul>
 
-    </div>
+            </div>
             <!-- 右边 -->
-        </div></div>
+        </div>
+    </div>
+
 </div>
 
 <footer class="footer">
     <div class="container">
         <div class="link-nav">
             <ul>
-                <li><a href="javascript:;">关于叮当</a></li>
+                <li><a href="javascript:;">关于音乐馆</a></li>
                 <li><a href="javascript:;">加入我们</a></li>
                 <li><a href="javascript:;">联系我们</a></li>
                 <li><a href="javascript:;">隐私政策</a></li>
@@ -183,18 +328,100 @@
         initScrollToTop();
     };
 </script>
-<script>
-    function f(){
-        var per = prompt("添加评论","");
-        document.getElementById("dick").value = per;
-
-    }
-</script>
 
 </body>
 </html>
 <script>
     new Vue({
         el: '#app',
-            })
+    })
+</script>
+            <script>
+             function changeStyle() {
+                var template = document.getElementById("template");
+                var index = template.selectedIndex;
+                var templatevalue = template.options[index].value;
+                var templatecss = document.getElementById("templatecss");
+                templatecss.setAttribute("href","css/" + templatevalue + ".css");
+                document.getElementsByTagName("form")[0].setAttribute("class",templatevalue);
+            }
+            </script>
+
+<script>
+    // 点击按钮
+    var button = document.getElementById("button");
+    var modal = document.getElementById("modal")
+    button.onclick = function () {
+        modal.style.display = "block";
+    };
+    //   关闭按钮
+    document.getElementById("close").onclick = function () {
+        modal.style.display = "none";
+    };
+    //   点击其他领域(即弹窗背景)
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none"
+        }
+    }
+</script>
+<script>
+    // 点击按钮
+    var button = document.getElementById("button");
+    var modal = document.getElementById("modal")
+    button.onclick = function () {
+        modal.style.display = "block";
+    };
+    //   关闭按钮
+    document.getElementById("close").onclick = function () {
+        modal.style.display = "none";
+    };
+    //   点击其他领域(即弹窗背景)
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none"
+        }
+    }
+</script>
+
+ <script>
+        // 点击按钮
+      var button = document.getElementById("button1");
+      var modal = document.getElementById("modal")
+      button.onclick = function () {
+        modal.style.display = "block";
+      };
+    //   关闭按钮
+      document.getElementById("close").onclick = function () {
+            modal.style.display = "none";
+      };
+    //   点击其他领域(即弹窗背景)
+    window.onclick = function(event){
+        if(event.target ==modal){
+                modal.style.display = "none"
+        }
+    }
+    </script>
+
+<script>
+    function submitAdd() {
+        document.getElementById("add_comment_id").value = {{ music_id }};
+        document.getElementById("add_comment_grade").value = 1;
+        document.getElementById("add_comment_type").value = "add_comment"
+        document.getElementById("add_comment").submit();
+        if({{ status }} == "success")  //提交成功{
+        {
+            alert({{ msg }})
+        }
+    }
+
+    function submitDel(a){
+        document.getElementById("del_music_id").value = {{ music_id }};
+        document.getElementById("del_comment_id").value = a;
+        document.getElementById("del_comment").submit();
+        if({{ status }} == "success")  //提交成功{
+        {
+            alert({{ msg }})
+        }
+    }
 </script>

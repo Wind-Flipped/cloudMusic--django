@@ -47,9 +47,9 @@
                 </div>
                 <div class="movie-list">
                     <ul>
-                        {% for hot in hot_singer%}
+                        {% for hot,user in hot_singer %}
                              <li>
-                            <a href="{% url 'musics:Singer_View' %}?singer_id={{ hot.singer_id }}" class="movie-poster">
+                            <a href="{% url 'users:userindex' user.user_id %}" class="movie-poster">
                                 {% if hot.singer_sex == 'Male' %}
                                 <img src="../../static/images/male_singer.jpg" alt="" class="poster">
                                 {% else %}
@@ -58,7 +58,7 @@
                                 <span class="movie-score">{{ hot.singer_name}}</span>
                             </a>
                             <span class="movie-title">{{ hot.singer_name }}</span>
-                            <a href="{% url 'musics:Singer_View' %}?music_id={{ hot.singer_id }}" class="movie-ticket-buy">查看详情</a>
+                            <a href="{% url 'users:userindex' user.user_id %}" class="movie-ticket-buy">查看详情</a>
                              </li>
 
                         {% endfor %}
@@ -74,29 +74,12 @@
                     <a href="javascript:;" class="panel-more">更多</a>
                 </div>
                 <div class="movie-rank">
-                    <ul>
-                        <script>
-                            var i = 1;
-                            for (; i < 10; i++) {
-                                if (i <= 3) {
-                                    document.write(<a href="{% url 'musics:Singer_View' %}?singer_id={{ hot_singer.i.singer_id }}"
-                                                      class="movie-poster">
-                                        <span class="movie-rank-num movie-rank-top3">{{ i }}</span>
-                                        <p class="movie-rank-name">{{ hot_music.i.singer_name }}</p>
-                                        <span class="box-office">{{ hot_music.i.singer_popularity }}</span>
-                                    </a>);
-                                } else {
-                                    document.write(<li>
-                                       <a href="{% url 'musics:Singer_View' %}?singer_id={{ hot_singer.i.singer_id }}">
-                                            <span class="movie-rank-num">{{ i }}</span>
-                                            <p class="movie-rank-name">{{ hot_singer.i.singer_name }}</p>
-                                            <span class="box-office">{{ hot_singer.i.singer_popularity }}</span>
-                                        </a>
-                                    </li>);
-                                }
-                            }
-                        </script>
-                    </ul>
+                    {% for hot,user in hot_singer %}
+                        <a href="{% url 'users:userindex' user.user_id %}" class="movie-poster">
+                            <p class="movie-rank-name">{{ hot.singer_name }}</p>
+                            <span class="box-office">{{ hot.singer_debut_time }}</span>
+                        </a>
+                        {% endfor %}
                 </div>
             </div>
         </div>
@@ -110,9 +93,9 @@
                 <div class="movie-list">
                     <ul>
 
-                        {% for newest_Music in new_singer%}
+                        {% for newest_Music,user in new_singer%}
                              <li>
-                            <a href="{% url 'musics:Singer_View' %}?singer_id={{ newest_Music.singer_id }}" class="movie-poster">
+                            <a href="{% url 'users:userindex' user.user_id %}" class="movie-poster">
                                 {% if newest_Music.singer_sex == 'Male' %}
                                 <img src="../../static/images/male_singer.jpg" alt="" class="poster">
                                 {% else %}
@@ -121,7 +104,7 @@
                                 <span class="movie-score">{{ newest_Music.singer_debut_time}}</span>
                             </a>
                             <span class="movie-title">{{ newest_Music.singer_name }}</span>
-                            <a href="{% url 'musics:Singer_View' %}?singer_id={{ newest_Music.singer_id }}" class="movie-ticket-buy">查看详情</a>
+                            <a href="{% url 'users:userindex' user.user_id %}" class="movie-ticket-buy">查看详情</a>
                              </li>
 
                         {% endfor %}

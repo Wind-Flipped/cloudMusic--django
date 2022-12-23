@@ -12,6 +12,8 @@ class UserProfile(AbstractUser):
     user_create_time = models.DateField(verbose_name="用户创建时间", null=False, auto_now_add=False, default=datetime.datetime.now)
     user_is_admin = models.BooleanField(verbose_name="是否为管理员", null=False, default=False)
     # user_email = models.EmailField(verbose_name="用户邮箱", null=False)
+    user_nickname = models.CharField(verbose_name="用户昵称", max_length=10,null=False, default="个人练习生1号")
+    user_saying = models.CharField(verbose_name="用户个性签名", max_length=250, null=False, default="这个练习生很懒，什么也没有写")
 
     class Meta:
         managed = True;

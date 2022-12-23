@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>cloudMusic_master</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/images/girl.png">
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/movie.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.fancybox@2.1.5/source/jquery.fancybox.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <!--logo-->
+        <a href="{% url 'musics:Music_Information_View' %}" class="logo"></a>
+        <!--导航标签-->
+        <div class="nav">
+            <ul class="navbar">
+                <li><a href="{% url 'musics:Music_Information_View' %}">首页</a></li>
+            </ul>
+        </div>
+
+        <!--用户登陆注册-->
+        <div class="user">
+            {% if not request.user %}
+            <div class="userout">
+                <a href="{%  url 'users:login' %}" class="login cur">登录</a>
+                <a href="{%  url 'users:register' %}" class="register cur">注册</a>
+            </div>
+            {% else %}
+            <div class="userout">
+                <a href="{%  url 'users:userinfo' %}">个人中心</a>
+            </div>
+            {% endif %}
+        </div>
+
+
+    </div>
+</header>
+
+<div class="content">
+    <div class="body-bg"></div>
+    <div class="container">
+        <!-- 电影信息栏 -->
+        <div class="movie-info-bar clearboth">
+            <div class="movie-poster">
+                <img src="../../static/images/music.png" alt="">
+            </div>
+            <div class="movie-info">
+                <p class="movie-name-zh">{{ music_name }}</p>
+
+                <ul>
+                    <li>
+                        <p>主题：<span>{{ music_theme }}</span></p>
+                    </li>
+                    <li>
+                        <p>歌手：<span>{{ writer.singer_name }}</span></p>
+                    </li>
+                    <li>
+                        <p><a href="{% url 'users:userindex' user.user_id %}">点击查看歌手主页 </a> </p>
+                    </li>
+                    <li>
+                        <p>类型：<span>{{ music_singing_type }}</span></p>
+                    </li>
+                    <li>
+                        <p>时长：<span>{{music_duration}} 分钟</span></p>
+                    </li>
+                    <li>
+                        <p>链接：<a href="{{ music_link }}">{{ music_link }}</a></p>
+                    </li>
+
+
+                    {% if is_liked %}
+                    <li>
+                        <p>取消收藏</p>
+                    </li><li>
+                        <a href="{% url 'musics:Music_View' %}?op_type=del_fav_list&music_id={{ music_id }}">
+                            <div id="app"><i class="el-icon-star-on" style="font-size: 50px;"></i></div>
+                        </a>
+                    </li><li>
+                        <p>（已收藏）</p>
+                    </li>
+                    {% else %}
+                    <li>
+                        <p>点击收藏</p>
+                    </li><li>
+                        <a href="{% url 'musics:Music_View' %}?op_type=add_fav_list&music_id={{ music_id }}">
+                            <div id="app"><i class="el-icon-star-off" style="font-size: 50px;"></i></div>
+                        </a>
+                    </li><li>
+                        <p>（未收藏）</p>
+                    </li>
+                    {% endif %}
+                </ul>
+                <div class="movie-wish-grade-btn clearboth">
+                    <a href="javascript:;" class="movie-grade-btn flexcenter ">
+                        <i></i>
+                        <span>评分</span>
+                    </a>
+                </div>
+            </div>
+            <div class="movie-grade-box">
+                <ul>
+                    <li><p>热度：<span>{{ music_popularity }}</span></p></li>
+
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!-- 电影主要栏 -->
+        <div class="movie-main-container clearboth">
+            <!-- 左边 -->
+            <div class="main-content">
+                <div class="tab-subtitle">
+                    <a href="javascript:;" class="active">已有评论</a>
+                    <a onclick="f1()" href="javascript:;" class="active1">添加评论</a>
+
+                </div>
+            <ul>
+
+                {% for comment in comment_list %}
+                    <li>
+                        <div class="photo">{{ comment.comment_id }}</div>
+                              <div class="text">
+                                <div class="title">
+                                  <div>{{ comment.comment_theme }}</div>
+                                  <div>{{ comment.comment_time }}</div>
+                                </div>
+                                <div class="content">
+                                  {{ comment.comment_content }}
+                                </div>
+                                  <br>
+                                  <a href="javascript:;" class="movie-wish-btn flexcenter fl">
+                                    <i></i>
+                                    <span>回复评论</span>
+
+                                </a>
+                                <a href="javascript:;" class="movie-grade-btn flexcenter fl">
+                                    <i></i>
+                                    <span>删除评论</span>
+                                </a>
+                              </div>
+                            <div class="item"> </div>
+
+                    </li>
+
+                  {% endfor %}
+
+
+            </ul>
+
+    </div>
+            <!-- 右边 -->
+        </div></div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="link-nav">
+            <ul>
+                <li><a href="javascript:;">关于叮当</a></li>
+                <li><a href="javascript:;">加入我们</a></li>
+                <li><a href="javascript:;">联系我们</a></li>
+                <li><a href="javascript:;">隐私政策</a></li>
+                <li><a href="javascript:;">问题反馈</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<div id="toTop"></div>
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+    window.onload = function () {
+        setPage("movie.html");
+        initPublic();
+        initScrollToTop();
+    };
+</script>
+<script>
+    function f(){
+        var per = prompt("添加评论","");
+        document.getElementById("dick").value = per;
+
+    }
+</script>
+
+</body>
+</html>
+<script>
+    new Vue({
+        el: '#app',
+            })
+</script>

@@ -28,4 +28,6 @@ urlpatterns = [
     path('userindex/<int:user_id>', views.UserIndex.as_view(), name='userindex'),
     # 歌手写歌界面
     path('create_music/',views.CreateMusic.as_view(),name='create_music'),
+    # 修改用户（歌手）个人信息
+    path('upload_info/',views.UploadUserInfo.as_view(),name='upload_info'),
 ]

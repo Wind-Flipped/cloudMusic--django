@@ -93,7 +93,7 @@
                                 <!-- <img id="logo-img" src="./img/icon/logo.png" alt="img"> -->
                                 <img id="logo-img" src="https://upload-bbs.mihoyo.com/upload/2021/07/08/218246419/4c05df942a75cfbe83879aaf518c2567_7781048890819451442.jpg" alt="您的头像真好看">
                                 <div class="img-title">
-                                    <span class="img-title-big" id="logo-text-1">{{ request.user.username }}</span>
+                                    <span class="img-title-big" id="logo-text-1">{{ request.user.user_nickname }}</span>
                                     <span class="img-text" id="logo-text-2">'s music platform</span>
                                 </div>
                             </div>
@@ -101,29 +101,28 @@
                             <div class="message cards" id="switchmore">
                                 <div class="des" id="des">
                                     <i class="fa-solid fa-quote-left"></i>
-                                    <div class="des-title"><span id="change">Hello&nbsp;World&nbsp;!</span><br /><span
-                                            id="change1">音乐教父就是我！</span></div>
+                                    <div class="des-title"><span id="change1">{{ request.user.user_saying }}</span></div>
                                     <i class="fa-solid fa-quote-right"></i>
                                 </div>
                             </div>
                             <!--社交链接-->
                             <div class="social" id="social">
-                                <a href="#" class="link" id="github" style="margin-left: 4px"
+                                <a href="https://github.com/" class="link" id="github" style="margin-left: 4px"
                                     target="_blank">
                                     <i class="fa-brands fa-github"></i>
                                 </a>
-                                <a href="https://wpa.qq.com/msgrd?v=3&uin=663962&site=qq&menu=yes" class="link"
+                                <a href="https://wpa.qq.com" class="link"
                                     id="qq" target="_blank">
                                     <i class="fa-brands fa-qq"></i>
                                 </a>
-                                <a href="mailto:663962@qq.com" class="link" id="email">
+                                <a href="20373625@buaa.edu.cn" class="link" id="email">
                                     <i class="fa-solid fa-envelope"></i>
                                 </a>
-                                <a href="https://space.bilibili.com/376649528" class="link" id="bilibili"
+                                <a href="https://www.bilibili.com/" class="link" id="bilibili"
                                     target="_blank">
                                     <i class="fa-brands fa-bilibili"></i>
                                 </a>
-                                <a href="https://t.me/fancypig" class="link" id="telegram" target="_blank">
+                                <a href="https://www.baidu.com" class="link" id="telegram" target="_blank">
                                     <i class="fa-brands fa-telegram"></i>
                                 </a>
                                 <a id="link-text">通过这里联系我</a>
@@ -187,7 +186,7 @@
                                     <div class="time cards" id="upWeather">
                                         <div class="timeshow" id="time">
                                             2000&nbsp;年&nbsp;0&nbsp;月&nbsp;00&nbsp;日&nbsp;<span
-                                                class="weekday">星期五</span><br><span class="time-text">00:00:00</span>
+                                                class="weekday">星期日</span><br><span class="time-text">00:00:00</span>
                                         </div>
                                         <div class="weather">
                                             <span id="city_text">天气</span>&nbsp;
@@ -321,39 +320,39 @@
                     <!--网站链接-->
                     <div class="row">
                         <div class="col">
-                            <a href="https://www.iculture.cc/qun" target="_blank">
+                            <a href="{% url 'users:upload_info' %}" target="_blank">
                                 <div class="link-card cards">
-                                    <span class="link-name">通知群</span>
+                                    <span class="link-name">个人资料修改</span>
                                 </div>
                             </a>
                         </div>
                         <div class="col 2">
-                            <a href="https://tools.iculture.cc" target="_blank">
+                            <a href="https://music.163.com/" target="_blank">
                                 <div class="link-card cards">
-                                    <span class="link-name">在线工具</span>
+                                    <span class="link-name">网抑云音乐</span>
                                 </div>
                             </a>
                         </div>
                         <div class="col">
-                            <a href="https://sign.iculture.cc/" target="_blank">
+                            <a href="https://y.qq.com/" target="_blank">
                                 <div class="link-card cards">
-                                    <span class="link-name">签到助手</span>
+                                    <span class="link-name">QQ音乐</span>
                                 </div>
                             </a>
                         </div>
                     </div>
                     <div class="row" style="margin-top: 1.5rem;">
                         <div class="col">
-                            <a href="https://www.iculture.cc/demo/yanglegeyang/" target="_blank">
+                            <a href="{% url 'musics:Music_Information_View' %}" target="_blank">
                                 <div class="link-card cards">
-                                    <span class="link-name">羊了个羊</span>
+                                    <span class="link-name">跳到首页</span>
                                 </div>
                             </a>
                         </div>
                         <div class="col 2">
-                            <a href="https://iculture.cc/demo/dragon/" target="_blank">
+                            <a href="{% url 'users:pwdmodify' %}" target="_blank">
                                 <div class="link-card cards">
-                                    <span class="link-name">召唤神龙</span>
+                                    <span class="link-name">密码重置</span>
                                 </div>
                             </a>
                         </div>
@@ -376,10 +375,10 @@
                         <!--左侧内容-->
                         <div class="box-left">
                             <div class="img-title">
-                                <span class="img-title-big" id="logo-title-other">iculture</span>
-                                <span class="img-text" id="logo-title-other-small">.cc</span><br />
-                                <span class="img-text">&nbsp;v&nbsp;3.3</span>
-                                <a href="https://www.iculture.cc" target="_blank">
+                                <span class="img-title-big" id="logo-title-other">高山流水遇知音</span>
+                                <span class="img-text" id="logo-title-other-small">音乐馆</span><br />
+                                <span class="img-text">线上音乐分享</span>
+                                <a href="{% url 'musics:Music_Information_View' %}" target="_blank">
                                     <i class="fa-brands fa-github"></i>
                                 </a>
                             </div>
@@ -488,7 +487,7 @@
                 </span>
                 <!-- 以下信息请不要修改哦 -->
                 <span id="made">&amp;&nbsp;哎哟不错呦&nbsp;<a href="https://www.iculture.cc/"
-                        target="_blank">{{ request.user.username }}</a></span>
+                        target="_blank">{{ request.user.user_nickname }}</a></span>
             </div>
             <!-- 歌词显示 -->
             <div id="lrc"></div>

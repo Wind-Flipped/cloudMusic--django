@@ -19,7 +19,7 @@ class IndexView(View):
     """显示首页"""
 
     def get(self, request):
-        return render(request, 'cloudMusic/index.html')
+        return render(request, 'musics/index.html')
 
 
 class RegisterView(View):
@@ -116,7 +116,7 @@ class LoginView(View):
                 user = UserProfile.objects.get(username=login_user)
                 if user.password == login_password:
                     login(request,user)
-                    return render(request,'users/userinfo.html',{})
+                    return HttpResponseRedirect('/users/userinfo')
                 else:
                     return render(request,'users/login.html',{'msg':'用户密码错误'})
             except ObjectDoesNotExist as e:
@@ -292,21 +292,52 @@ class UserIndex(View):
             songsheet.append(Songsheet_Information.objects.get(songsheet_id=sst['songsheet']))
         create_time = user_songsheet.values('create_time')
         update_time = user_songsheet.values('update_time')
-        music = User_Music.objects.filter(user=user)
+        user_music = User_Music.objects.filter(user=user).values('music')
+        music = []
+        for um in user_music:
+            music.append(Music_Information.objects.get(music_id=um['music']))
         user_need_exp = math.pow(2,user.user_rank - 1) * 100
+        remain_exp = get_exp(user.user_exp,user.user_rank)
         return render(request, 'users/userindex.html',{'user':user,'is_singer':is_singer,'singer':singer,'songsheet':songsheet,'music':music,'user_need_exp':user_need_exp,
-                                                       'musics':musics,'albums':albums})
+                                                       'musics':musics,'albums':albums,'remain_exp':remain_exp})
 
 class CreateMusic(View):
     def get(self,request):
         user = request.user
         try:
-            singer = User_Become_Singer.objects.get(user=user)
+            singer = User_Become_Singer.objects.get(user=user).singer
             is_singer = True
         except:
             return render(request,'users/userinfo.html',{'msg':'您还不是一位歌手，请点击成为歌手，再发布歌曲'})
 
         return render(request, 'users/create_music.html', {'singer': singer, 'is_singer': is_singer,'user':user})
+
+class UploadUserInfo(View):
+    def get(self,request):
+        user = request.user
+        try:
+            singer = User_Become_Singer.objects.get(user=user).singer
+            is_singer = True
+            return render(request,'users/upload_info.html',{'user':user,'singer':singer,'is_singer':is_singer})
+        except:
+            is_singer = False
+            return render(request,'users/upload_info.html',{'user':user,'is_singer':is_singer})
+
+    def post(self,request):
+        user = request.user
+        user.user_nickname = request.POST.get('user_nickname','')
+        user.user_saying = request.POST.get('user_saying','')
+        user.save()
+        try:
+            singer = User_Become_Singer.objects.get(user=user).singer
+            singer.singer_name = request.POST.get('singer_name','')
+            singer.singer_age = request.POST.get('singer_age','')
+            singer.singer_nationality = request.POST.get('singer_nationality','')
+            singer.singer_sex = request.POST.get('singer_sex','')
+            singer.save()
+        except:
+            pass
+        return render(request,'users/userinfo.html',{})
 
 class UploadUserInfoView(LoginRequiredMixin, View):
     """个人中心的个人资料修改"""
@@ -348,6 +379,11 @@ class UploadPwdView(LoginRequiredMixin, View):
         else:
             res = pwdmodify_form.errors
         return HttpResponse(json.dumps(res), content_type='application/json')
+
+def get_exp(exp,level):
+    for i in range(1,level):
+        exp -= 100 * math.pow(2,i-1)
+    return exp
 
 # def page_not_look(request):
 #     """全局403配置"""

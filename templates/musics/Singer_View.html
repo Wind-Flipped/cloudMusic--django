@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>cloudMusic_master</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/images/girl.png">
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/movie.css">
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <!--logo-->
+        <a href="{% url 'musics:Music_Information_View' %}" class="logo"></a>
+        <!--导航标签-->
+        <div class="nav">
+            <ul class="navbar">
+                <li><a href="{% url 'musics:Music_Information_View' %}">首页</a></li>
+            </ul>
+        </div>
+
+        <!--用户登陆注册-->
+        <div class="user">
+            <div class="userout">
+                <a href="{%  url 'users:login' %}" class="login cur">登录</a>
+                <a href="{%  url 'users:register' %}" class="register cur">注册</a>
+            </div>
+            <div class="userin">
+                <a href="javascript:;" class="menu-item-user">
+                    <span class="user-name"></span>
+                </a>
+                <span class="caret"></span>
+                <ul class="dropdown-menu">
+                    <li><a href="{%  url 'users:userinfo' %}">个人中心</a></li>
+
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+</header>
+
+<div class="content">
+    <div class="body-bg"></div>
+    <div class="container">
+        <!-- 电影信息栏 -->
+        <div class="movie-info-bar clearboth">
+            <div class="movie-poster">
+                <img src="../../static/images/girl.png" alt="">
+            </div>
+            <div class="movie-info">
+                <p class="movie-name-zh">{{ singer_name }}</p>
+
+                <ul>
+                    <li>
+                        <p>国籍：<span>{{ singer_nationality }}</span></p>
+                    </li>
+                    <li>
+                        <p>年龄：<span>{{ singer_age }}</span></p>
+
+                    </li>
+                    <li>
+                        <p>性别：<span>{{singer_sex}}</span></p>
+                    </li>
+                    <li>
+                        <p>上线时间：<span>{{singer_debut_time}}</span></p>
+                    </li>
+                </ul>
+                <div class="movie-wish-grade-btn clearboth">
+                    <a href="javascript:;" class="movie-wish-btn flexcenter ">
+                        <i></i>
+                        <span>点赞</span>
+
+                    </a>
+                    <a href="javascript:;" class="movie-grade-btn flexcenter ">
+                        <i></i>
+                        <span>评分</span>
+                    </a>
+                </div>
+            </div>
+            <div class="movie-grade-box">
+                <ul>
+                    <li><p>热度：<span>{{ singer_popularity }}</span></p></li>
+
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!-- 电影主要栏 -->
+         <div class="movie-main-container clearboth">
+            <!-- 左边 -->
+            <div class="main-content">
+                <div class="tab-subtitle">
+                    <a href="javascript:;" class="active">歌曲</a>
+
+                </div>
+                <!-- 购票/预购 -->
+                <div class="tab-content">
+
+                    <!-- 影院列表 -->
+                    <div class="movie-cinema-list">
+                        <div class="cinema-list">
+                            <ul class="cinema-list-item">
+                                {% for music in sing_music_list %}
+                                    <li>
+                                    <p class="row1"><a href="">{{ music.music_name}}</a></p>
+                                    <p class="row2">上线时间：<span>{{ music.music_public_time }}</span></p>
+                                    <p class="row3">
+                                        <span>{{ music.music_theme }}</span><span>{{ music.music_singing_type }}</span>
+                                        <span>{{ music.music_popularity }}</span>
+                                    </p>
+
+                                    <div class="ticket-price-buy">
+                                        <a href="{% url 'musics:Music_View' %}?music_id={{ music.music_id }}" class="ticket-buy-btn">查看详情</a>
+                                    </div>
+                                    <!-- 排期、购票 -->
+
+                                </li>
+                                {% endfor %}
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 右边 -->
+         <div class="aside-content">
+                <p class="ac-title">歌手专辑</p>
+                <div class="more-movie">
+                    <ul>
+                        {% for al in album_list %}
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="./imgs/poster/yishengyouni.jpg" alt="">
+                                </a>
+                                <div class="aside-info">
+                                    <h3 class="clearboth">
+                                        <a href="javascript:;">{{ al.album_name }}</a>
+                                        <span>{{ al.album_popularity }}</span>
+                                    </h3>
+                                    <p>上线时间：<span>{{ al.album_created_time }}</span></p>
+                                    <p>歌曲数量：<span>{{ al.album_music_num }}</span></p>
+                                    <p>覆盖模式：<span>{{ al.album_coverpage_pattern }}</span></p>
+                                    <a href="javascript:;" class="link">查看详情 ＞</a>
+                                </div>
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            </div>
+
+        </div></div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="link-nav">
+            <ul>
+                <li><a href="javascript:;">关于叮当</a></li>
+                <li><a href="javascript:;">加入我们</a></li>
+                <li><a href="javascript:;">联系我们</a></li>
+                <li><a href="javascript:;">隐私政策</a></li>
+                <li><a href="javascript:;">问题反馈</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<div id="toTop"></div>
+
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+    window.onload = function () {
+        setPage("movie.html");
+        initPublic();
+        initScrollToTop();
+    };
+</script>
+
+
+</body>
+</html>

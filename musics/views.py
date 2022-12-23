@@ -36,6 +36,9 @@ class Music_Information_View(View):
 
         music_list = Music_Information.objects.all()
         hot_music_list = music_list.order_by('-music_popularity')[:5]
+        newest_music_list = music_list.order_by('-music_public_time')[:5]
+        level = range(1,len(hot_music_list) + 1)
+        rank = zip(hot_music_list,level)
         music_num = music_list.count()
 
         sort = request.GET.get('sort', '')
@@ -51,18 +54,28 @@ class Music_Information_View(View):
         p = Paginator(music_list, 10, request=request)
         music_pages = p.page(page)
 
-        return render(request, 'Music_Information_View.html', {
+        return render(request, 'musics/Music_Information_View.html', {
             'music_pages': music_pages,
             'music_num': music_num,
             'hot_music': hot_music_list,
-            'sort': sort,
+            'newest_music':newest_music_list,
+            'rank':rank,
         })
 
     # 操作1：根据演唱形式或主题或关键字搜索 -- 返回搜索结果
     # 操作2：点击“歌曲详情” -- 跳转到歌曲专属页面
     def post(self, request):
 
-        op_type = request.POST.get('op_type', '')
+        op_type = request.GET.get('op_type', '')
+        music_list = Music_Information.objects.all()
+        hot_music_list = music_list.order_by('-music_popularity')[:5]
+        newest_music_list = music_list.order_by('-music_public_time')[:5]
+
+        sort = request.GET.get('sort', '')
+        if sort == 'hot':
+            music_list = music_list.order_by('-music_popularity')
+        elif sort == 'time':
+            music_list = music_list.order_by('-music_public_time')
 
         if op_type in ['search_type', 'search_theme', 'search_keyword']:
 
@@ -80,22 +93,26 @@ class Music_Information_View(View):
             p = Paginator(music_list, 10, request=request)
             music_pages = p.page(page)
 
-            return render(request, 'Music_Information_View.html', {
+            return render(request, 'musics/Music_Information_View.html', {
                 'music_pages': music_pages,
                 'music_num': len(music_list),
+                'search':True,
+                'key_music':music_list,
+                'hot_music': hot_music_list,
+                'newest_music': newest_music_list,
             })
 
         if op_type == 'check_detail':
 
             music_id = request.POST.get('music_id', '')
-            return render(request, 'Music_View.html', {
+            return render(request, 'musics/Music_View.html', {
                 'music_id': music_id,
             })
 
     # 根据关键字搜索
     def __get_by_keywords(self, request):
 
-        keywords = request.GET.get('keywords', '')
+        keywords = request.POST.get('keywords', '')
         music_list = Music_Information.objects.filter(music_name__icontains=keywords)
         return music_list
 
@@ -121,6 +138,18 @@ class Music_View(View):
 
         music_id = request.GET.get('music_id', '')
         music = Music_Information.objects.get(music_id=music_id)
+        op_type = request.GET.get('op_type', '')
+        if op_type == 'add_comment':
+            res = self.__add_comment(request)
+        elif op_type == 'add_fav_list':
+            res = self.__add_fav_list(request)
+        elif op_type == 'del_fav_list':
+            res = self.__del_fav_list(request)
+        try:
+            exist_record = User_Music.objects.get(user=request.user, music=music)
+            is_liked = True
+        except:
+            is_liked = False
 
         music_name = music.music_name
         music_singing_type = music.music_singing_type
@@ -129,18 +158,21 @@ class Music_View(View):
         music_popularity = music.music_popularity
         music_link = music.music_link
 
-        music_comment_list = User_Comment_Music.objects.filter(music=music)
+        music_comment_list = User_Comment_Music.objects.filter(target_music=music).values('comment')
         comment_list = []
         for music_comment in music_comment_list:
-            comment_list.append(music_comment.comment)
+            comment_list.append(Comment_Information.objects.get(comment_id=music_comment['comment']))
 
         singer_music = Singer_Music.objects.get(music=music)
         writer = singer_music.singer
+        user_singer = User_Become_Singer.objects.get(singer=writer)
+        user = user_singer.user
 
         music.music_popularity += 1
         music.save()
 
-        return render(request, 'Music_View.html', {
+        return render(request, 'musics/Music_View.html', {
+            'music_id': music_id,
             'music_name': music_name,
             'music_singing_type': music_singing_type,
             'music_theme': music_theme,
@@ -148,7 +180,9 @@ class Music_View(View):
             'music_popularity': music_popularity,
             'music_link': music_link,
             'comment_list': comment_list,
-            'writer': writer.singer_id
+            'writer': writer,
+            'user':user,
+            'is_liked':is_liked,
         })
 
     # 操作1：添加或删除评论
@@ -162,7 +196,7 @@ class Music_View(View):
             res['msg'] = '用户未登录'
             return HttpResponse(json.dumps(res), content_type='application/json')
 
-        op_type = request.POST.get('op_type', '')
+        op_type = request.GET.get('op_type', '')
 
         if op_type in ['add_comment', 'del_comment', 'add_fav_list', 'del_fav_list']:
             if op_type == 'add_comment':
@@ -177,14 +211,14 @@ class Music_View(View):
 
         if op_type == 'check_comment':
             comment_id = request.POST.get('comment_id', '')
-            return render(request, 'Comment_View.html', {
+            return render(request, 'musics/Comment_View.html', {
                 'comment_id': comment_id,
             })
 
     # 对该歌曲进行评论
     def __add_comment(self, request):
 
-        music_id = request.POST.get('music_id')
+        music_id = request.GET.get('music_id')
         music = Music_Information.objects.get(music_id=music_id)
 
         comment = Comment_Information()
@@ -223,15 +257,16 @@ class Music_View(View):
     # 收藏歌曲
     def __add_fav_list(self, request):
 
-        music_id = request.POST.get('music_id', '')
+        music_id = request.GET.get('music_id', '')
         music = Music_Information.objects.get(music_id=music_id)
-
-        exist_record = User_Music.objects.get(user=request.user, music=music)
-        if exist_record:
+        try:
+            exist_record = User_Music.objects.get(user=request.user, music=music)
             return {
                 'status': 'fail',
                 'msg': '无法重复收藏'
             }
+        except:
+            pass
 
         user_music = User_Music()
         user_music.user = request.user
@@ -249,21 +284,23 @@ class Music_View(View):
     # 取消收藏歌曲
     def __del_fav_list(self, request):
 
-        music_id = request.POST.get('music_id', '')
+        music_id = request.GET.get('music_id', '')
         music = Music_Information.objects.get(music_id=music_id)
 
-        exist_record = User_Music.objects.get(user=request.user, music=music)
-        if not exist_record:
+        try:
+            exist_record = User_Music.objects.get(user=request.user, music=music)
+            exist_record.delete()
+            return {
+                'status': 'success',
+                'msg': '删除成功'
+            }
+        except:
             return {
                 'status': 'fail',
                 'msg': '收藏信息不存在'
             }
 
-        exist_record.delete()
-        return {
-            'status': 'success',
-            'msg': '删除成功'
-        }
+
 
 # 歌手信息表展示页面
 class Singer_Information_View(View):
@@ -273,6 +310,7 @@ class Singer_Information_View(View):
 
         singer_list = Singer_Information.objects.all()
         hot_singer_list = singer_list.order_by('-singer_popularity')[:5]
+        new_singer_list = singer_list.order_by('-singer_debut_time')[:5]
         singer_num = singer_list.count()
 
         sort = request.GET.get('sort', '')
@@ -288,10 +326,11 @@ class Singer_Information_View(View):
         p = Paginator(singer_list, 10, request=request)
         singer_pages = p.page(page)
 
-        return render(request, 'Singer_Information_View.html', {
+        return render(request, 'musics/Singer_Information_View.html', {
             'singer_pages': singer_pages,
             'singer_num': singer_num,
             'hot_singer': hot_singer_list,
+            'new_singer':new_singer_list,
             'sort': sort,
         })
 
@@ -384,7 +423,7 @@ class Singer_View(View):
         singer.singer_popularity += 1
         singer.save()
 
-        return render(request, 'Singer_View.html', {
+        return render(request, 'musics/Singer_View.html', {
             'singer_name': singer_name,
             'singer_nationality': singer_nationality,
             'singer_age': singer_age,
@@ -548,7 +587,7 @@ class Album_Information_View(View):
         p = Paginator(album_list, 10, request=request)
         album_pages = p.page(page)
 
-        return render(request, 'Album_Information_View.html', {
+        return render(request, 'musics/Album_Information_View.html', {
             'album_pages': album_pages,
             'album_num': album_num,
             'hot_album': hot_album_list,
@@ -664,6 +703,7 @@ class Album_View(View):
             })
 
 # 评论信息页面
+# 评论信息页面
 class Comment_View(View):
 
     # 进入页面时显示的信息
@@ -706,7 +746,7 @@ class Comment_View(View):
             'comment_grade': comment_grade,
             'comment_content': comment_content,
             'comment_time': comment_time,
-            'target': 'music',
+            'target': 'musics',
             'name': name,
             'feedback_page': feedback_pages,
             'feedback_num': len(feedback_list),
@@ -739,7 +779,7 @@ class Comment_View(View):
         exist_singer_record = User_Comment_Singer.objects.get(comment=comment)
         if exist_music_record:
             author = exist_music_record.user
-            target = 'music'
+            target = 'musics'
             music_id = exist_music_record.music.music_id
         else:
             author = exist_singer_record.user
@@ -752,7 +792,7 @@ class Comment_View(View):
                 'user_id': user_id
             })
         elif op_type == 'check_target':
-            if target == 'music':
+            if target == 'musics':
                 return render(request, 'Music_View.html', {
                     'music_id': music_id,
                 })
@@ -1310,7 +1350,7 @@ def get_level(exp):
     level = 1
     need_exp = 100
     remain_exp = exp
-    while remain_exp > need_exp:
+    while remain_exp >= need_exp:
         remain_exp -= need_exp
         need_exp *= 2
         level += 1

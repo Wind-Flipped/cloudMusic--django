@@ -1,0 +1,39 @@
+{% extends 'login/base.html' %}
+
+{% block title %}讨论{% endblock %}
+{% block css %}
+    <link href="{% static 'css/login.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/page.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+
+{% block content %}
+    <div class="a" style=" overflow-y:auto;overflow-x:auto; height:390px; width:40%;">
+    <div style="position: absolute;left: 6%">
+    <h2 style="color: red">欢迎讨论</h2>
+{% for t in article %}
+    <h3><a href=""></a>{{ t.title }}:</h3><h4>{{ t.content }}</h4>
+{#    {% if request.session.is_login %}#}
+{#       {{ request.session.user_name }}#}
+{#    {% endif %}#}
+    <hr width="650px">
+{% endfor %}
+    </div>
+    </div>
+    <div class="c">
+<form action="/page/" method="post">
+    {% csrf_token %}
+    <div style="position:relative;left: 6%;top:40px">
+    <label>标题
+        <input type="text" name="title" />
+    </label>
+    <p></p>
+    <label>内容
+        <input type="text" name="content" style="width: 600px"/>
+    </label>
+    <p></p>
+    <input type="submit" value="提交" class="btn btn-primary pull-right" style="position: relative;left:-93%;">
+    </div>
+</form>
+    </div>
+{% endblock %}

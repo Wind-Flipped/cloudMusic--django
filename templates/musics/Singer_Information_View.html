@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>cloudMusic_master</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/images/girl.png">
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css">
+<!-- 引入组件库 -->
+</head>
+<body>
+<header class="header">
+
+
+    <div class="container">
+        <!--logo-->
+        <a href="Music_Information_View.html" class="logo"></a>
+        <!--导航标签-->
+        <div class="nav">
+            <ul class="navbar">
+                <li><a href="{% url 'musics:Music_Information_View' %}">歌曲</a></li>
+                <li><a href="{% url 'musics:Singer_Information_View' %}" class="active">歌手</a></li>
+                <li><a href="{% url 'musics:Album_Information_View' %}">专辑</a></li>
+                <li><a href="{% url 'musics:Comment_View' %}">社区</a></li>
+            </ul>
+        </div>
+
+        <!--搜索栏-->
+        <div class="search">
+            <form class="form-search" action="{% url 'musics:Music_Information_View' %}" method="post">
+                {% csrf_token %}
+                <input type="text" id="search-input" placeholder="搜歌手" autocomplete="off"/>
+                <button type="submit" class="form-search-icon" href="javascript:;"></button>
+            </form>
+        </div>
+
+
+    </div>
+</header>
+
+<div class="container">
+    <div class="movie-grid">
+        <div class="panel">
+            <div class="main">
+                <div class="panel-header">
+                    <span class="panel-title">最受喜欢（<span>20</span>位）</span>
+                    <a href="javascript:;" class="panel-more">更多</a>
+                </div>
+                <div class="movie-list">
+                    <ul>
+                        {% for hot in hot_singer%}
+                             <li>
+                            <a href="{% url 'musics:Singer_View' %}?singer_id={{ hot.singer_id }}" class="movie-poster">
+                                {% if hot.singer_sex == 'Male' %}
+                                <img src="../../static/images/male_singer.jpg" alt="" class="poster">
+                                {% else %}
+                                <img src="../../static/images/female_singer.jpg" alt="" class="poster">
+                                {% endif %}
+                                <span class="movie-score">{{ hot.singer_name}}</span>
+                            </a>
+                            <span class="movie-title">{{ hot.singer_name }}</span>
+                            <a href="{% url 'musics:Singer_View' %}?music_id={{ hot.singer_id }}" class="movie-ticket-buy">查看详情</a>
+                             </li>
+
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="aside">
+                <div class="panel-header">
+                    <span class="panel-title">猜你喜欢</span>
+                    <a href="javascript:;" class="panel-more">更多</a>
+                </div>
+                <div class="movie-rank">
+                    <ul>
+                        <script>
+                            var i = 1;
+                            for (; i < 10; i++) {
+                                if (i <= 3) {
+                                    document.write(<a href="{% url 'musics:Singer_View' %}?singer_id={{ hot_singer.i.singer_id }}"
+                                                      class="movie-poster">
+                                        <span class="movie-rank-num movie-rank-top3">{{ i }}</span>
+                                        <p class="movie-rank-name">{{ hot_music.i.singer_name }}</p>
+                                        <span class="box-office">{{ hot_music.i.singer_popularity }}</span>
+                                    </a>);
+                                } else {
+                                    document.write(<li>
+                                       <a href="{% url 'musics:Singer_View' %}?singer_id={{ hot_singer.i.singer_id }}">
+                                            <span class="movie-rank-num">{{ i }}</span>
+                                            <p class="movie-rank-name">{{ hot_singer.i.singer_name }}</p>
+                                            <span class="box-office">{{ hot_singer.i.singer_popularity }}</span>
+                                        </a>
+                                    </li>);
+                                }
+                            }
+                        </script>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="main">
+                <div class="panel-header">
+                    <span class="panel-title">最新注册（<span>30</span>人）</span>
+                    <a href="javascript:;" class="panel-more">查看更多</a>
+                </div>
+                <div class="movie-list">
+                    <ul>
+
+                        {% for newest_Music in new_singer%}
+                             <li>
+                            <a href="{% url 'musics:Singer_View' %}?singer_id={{ newest_Music.singer_id }}" class="movie-poster">
+                                {% if newest_Music.singer_sex == 'Male' %}
+                                <img src="../../static/images/male_singer.jpg" alt="" class="poster">
+                                {% else %}
+                                <img src="../../static/images/female_singer.jpg" alt="" class="poster">
+                                {% endif %}
+                                <span class="movie-score">{{ newest_Music.singer_debut_time}}</span>
+                            </a>
+                            <span class="movie-title">{{ newest_Music.singer_name }}</span>
+                            <a href="{% url 'musics:Singer_View' %}?singer_id={{ newest_Music.singer_id }}" class="movie-ticket-buy">查看详情</a>
+                             </li>
+
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="link-nav">
+            <ul>
+                <li><a href="javascript:;">关于我们</a></li>
+                <li><a href="javascript:;">加入我们</a></li>
+                <li><a href="javascript:;">联系我们</a></li>
+                <li><a href="javascript:;">隐私政策</a></li>
+                <li><a href="javascript:;">问题反馈</a></li>
+            </ul>
+            <div class="copyright">cloudMusic_Master</div>
+        </div>
+        <div class="sns">
+            <a href="javascript:;" class="sina-icon icon"></a>
+            <a href="javascript:;" class="wechat-icon icon"></a>
+            <a href="javascript:;" class="rss-icon icon"></a>
+        </div>
+    </div>
+</footer>
+
+<div id="toTop"></div>
+
+<script type="text/javascript" src="../../static/js/cloudMusic_main.js"></script>
+<script type="text/javascript" src="../../static/js/slidey.js"></script>
+
+
+</body>
+</html>
